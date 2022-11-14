@@ -4,15 +4,19 @@ namespace ReachTheFlag.Cells
 {
     class FlagCell : BoardCell
     {
+        private const ConsoleColor _onPlayerEnterColor = ConsoleColor.Green;
+        private const ConsoleColor _originalColor = ConsoleColor.Magenta;
+
         public FlagCell(int x, int y) : base(x, y)
         {
             this.Symbol = CellPrintSymbols.Flag;
-            this.Color = ConsoleColor.Magenta;
+            this.Color = _originalColor;
         }
 
         public override void OnPlayerLeave()
         {
-            this.Color = ConsoleColor.Magenta;
+            this.Color = _originalColor;
+            base.OnPlayerLeave();
         }
 
         public override bool CanBeVisited()
@@ -27,15 +31,8 @@ namespace ReachTheFlag.Cells
 
         public override void OnPlayerEnter()
         {
-            this.IsVisited = true;
-            this.Color = ConsoleColor.Green;
-        }
-
-        public override BoardCell Clone()
-        {
-            BoardCell cell = CellFactory.GetCell(X, Y, CellTypes.Flag);
-
-            return base.CopyBasePropertiesToCell(cell);
+            this.Color = _onPlayerEnterColor;
+            base.OnPlayerEnter();
         }
     }
 }

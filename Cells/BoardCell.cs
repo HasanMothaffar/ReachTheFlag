@@ -1,5 +1,4 @@
 ﻿using ReachTheFlag.Utils;
-using System;
 
 namespace ReachTheFlag.Cells
 {
@@ -9,9 +8,10 @@ namespace ReachTheFlag.Cells
         public ConsoleColor Color = ConsoleColor.White;
 
         public bool IsVisited = false;
+        public bool IsPlayerVisiting = false;
 
-        protected int X;
-        protected int Y;
+        public int X { get; init; }
+        public int Y { get; init; }
 
         public BoardCell(int x, int y)
         {
@@ -19,32 +19,28 @@ namespace ReachTheFlag.Cells
             this.Y = y;
         }
 
-        public abstract void OnPlayerEnter();
-        public abstract void OnPlayerLeave();
+        public virtual void OnPlayerEnter() {
+            this.IsVisited = true;
+            this.IsPlayerVisiting = true;
+        }
+
+        public virtual void OnPlayerLeave() {
+            this.IsPlayerVisiting = false;
+        }
+
         public abstract bool CanBeVisited();
         public abstract bool IsValid();
 
-
-        /**
-         * Derived classes should implement this function and then call
-         * CopyBasePropertiesToCell(cell)
-         **/
-        public abstract BoardCell Clone();
-
-        public BoardCell CopyBasePropertiesToCell(BoardCell cell)
+        public BoardCell Clone()
         {
-            cell.IsVisited = this.IsVisited;
-            cell.Symbol = this.Symbol;
-            cell.Color = this.Color;
-
-            return cell;
+            return (BoardCell)this.MemberwiseClone();
         }
 
         public override bool Equals(object obj)
         {
             if (obj is not BoardCell other) return false;
 
-            return (IsVisited, Symbol, Color) == (other.IsVisited, other.Symbol, other.Color);
+            return ObjectComparerUtility.ObjectsAreEqual(this, other);
         }
     }
 }

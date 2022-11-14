@@ -12,6 +12,7 @@ namespace ReachTheFlag.Cells
         public override void OnPlayerLeave()
         {
             this.Symbol = CellPrintSymbols.InfiniteStep;
+            base.OnPlayerLeave();
         }
 
         public override bool CanBeVisited()
@@ -26,14 +27,8 @@ namespace ReachTheFlag.Cells
 
         public override void OnPlayerEnter()
         {
-            this.IsVisited = true;
-        }
-
-        public override BoardCell Clone()
-        {
-            BoardCell cell = CellFactory.GetCell(X, Y, CellTypes.InfiniteStep);
-
-            return base.CopyBasePropertiesToCell(cell);
+            this.Symbol = CellPrintSymbols.Player;
+            base.OnPlayerEnter();
         }
     }
 }

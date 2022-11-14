@@ -1,10 +1,11 @@
-﻿using ReachTheFlag.Cells;
-
-namespace ReachTheFlag.Cells
+﻿namespace ReachTheFlag.Cells
 {
     class NStepCell : BoardCell
     {
         private int allowedNumberOfSteps;
+
+        private const ConsoleColor _playerIsVisitingColor = ConsoleColor.Yellow;
+        private const ConsoleColor _noMoreAllowedStepsColor = ConsoleColor.Red;
 
         public NStepCell(int x, int y, int allowedNumberOfSteps = 1) : base(x, y)
         {
@@ -15,8 +16,8 @@ namespace ReachTheFlag.Cells
         public override void OnPlayerEnter()
         {
             this.Symbol = CellPrintSymbols.Player;
-            this.Color = System.ConsoleColor.Yellow;
-            this.IsVisited = true;
+            this.Color = _playerIsVisitingColor;
+            base.OnPlayerEnter();
         }
 
         public override void OnPlayerLeave()
@@ -26,8 +27,10 @@ namespace ReachTheFlag.Cells
 
             if (this.allowedNumberOfSteps == 0)
             {
-                this.Color = System.ConsoleColor.Red;
+                this.Color = _noMoreAllowedStepsColor;
             }
+
+            base.OnPlayerLeave();
         }
 
         public override bool CanBeVisited()
@@ -38,13 +41,6 @@ namespace ReachTheFlag.Cells
         public override bool IsValid()
         {
             return !this.CanBeVisited();
-        }
-
-        public override BoardCell Clone()
-        {
-            BoardCell cell = CellFactory.GetCell(X, Y, this.allowedNumberOfSteps.ToString());
-
-            return base.CopyBasePropertiesToCell(cell);
         }
 
         public override bool Equals(object obj)

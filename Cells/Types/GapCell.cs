@@ -33,12 +33,5 @@ namespace ReachTheFlag.Cells
         {
 
         }
-
-        public override BoardCell Clone()
-        {
-            BoardCell cell = CellFactory.GetCell(X, Y, CellTypes.Gap);
-
-            return base.CopyBasePropertiesToCell(cell);
-        }
     }
 }
