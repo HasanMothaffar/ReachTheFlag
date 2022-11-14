@@ -27,6 +27,7 @@ namespace ReachTheFlag.Utils
             }
 
             Console.ForegroundColor = originalConsoleForgroundColor;
+            Console.WriteLine();
         }
 
         public static void PrintPlayerPath(List<MoveDirection> playerPath)
