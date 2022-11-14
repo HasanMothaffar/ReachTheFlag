@@ -11,7 +11,7 @@ namespace ReachTheFlag.Utils
             int rowsCount = board.RowsCount;
             int columnsCount = board.ColumnsCount;
 
-            BoardCell[,] cells = board.GetAllCells();
+            BoardCell[][] cells = board.GetAllCells();
 
             ConsoleColor originalConsoleForgroundColor = Console.ForegroundColor;
 
@@ -19,8 +19,8 @@ namespace ReachTheFlag.Utils
             {
                 for (var j = 0; j < columnsCount; j++)
                 {
-                    Console.ForegroundColor = cells[i, j].Color;
-                    Console.Write("{0} ", cells[i, j].Symbol);
+                    Console.ForegroundColor = cells[i][j].Color;
+                    Console.Write("{0} ", cells[i][j].Symbol);
                 }
 
                 Console.WriteLine();

@@ -1,8 +1,5 @@
-﻿using ReachTheFlag.Cells;
-using ReachTheFlag.Structure;
+﻿using ReachTheFlag.Structure;
 using ReachTheFlag.Utils;
-using System;
-using System.Collections.Generic;
 
 namespace ReachTheFlag.Game
 {
@@ -14,9 +11,8 @@ namespace ReachTheFlag.Game
 
         // For restarting the game
         private readonly GameBoard _originalBoard;
-        private readonly Point _originalPlayerPosition;
 
-        private readonly Dictionary<string, MoveDirection> moveDirections = new Dictionary<string, MoveDirection>()
+        private readonly Dictionary<string, MoveDirection> moveDirections = new()
         {
             { "a", MoveDirection.Left },
             { "d", MoveDirection.Right },
@@ -24,14 +20,13 @@ namespace ReachTheFlag.Game
             { "s", MoveDirection.Down },
         };
 
-        public ReachTheFlagGame(Point initialPlayerPosition)
+        public ReachTheFlagGame()
         {
             GameBoard parsedBoard = InputParser.ParseInputBoard(MAP_FILE_PATH);
 
-            this._currentState = new GameState(parsedBoard, initialPlayerPosition);
+            this._currentState = new GameState(parsedBoard);
 
-            this._originalBoard = InputParser.ParseInputBoard(MAP_FILE_PATH);
-            this._originalPlayerPosition = initialPlayerPosition.Clone();
+            this._originalBoard = parsedBoard.Clone();
         }
 
         public GameStatus GetStatus()
@@ -47,7 +42,7 @@ namespace ReachTheFlag.Game
             return _currentState.IsFinal();
         }
 
-        public void Update(char pressedKey)
+        public void RespondToUserInput(char pressedKey)
         {
             string lowerCaseKey = pressedKey.ToString().ToLower();
 
@@ -87,7 +82,7 @@ namespace ReachTheFlag.Game
 
         public void Restart()
         {
-            this._currentState = new GameState(this._originalBoard, this._originalPlayerPosition);
+            this._currentState = new GameState(this._originalBoard);
         }
     }
 }

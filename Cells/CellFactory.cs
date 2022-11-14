@@ -23,6 +23,17 @@ namespace ReachTheFlag.Cells
                         return new InfiniteStepCell(x, y);
                     }
 
+                case CellTypes.Player:
+                    {
+                        BoardCell cell = new NStepCell(x, y, 1)
+                        {
+                            IsPlayerVisiting = true
+                        };
+
+                        return cell;
+                    }
+
+
                 default:
                     {
                         try
@@ -45,5 +56,6 @@ namespace ReachTheFlag.Cells
         public const string Flag = "f";
         public const string Gap = "g";
         public const string InfiniteStep = "m";
+        public const string Player = "p";
     }
 }

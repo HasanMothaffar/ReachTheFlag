@@ -11,7 +11,6 @@ namespace ReachTheFlag.Structure
         public readonly Point PlayerPosition;
         private List<MoveDirection> _playerPath;
         
-
         // dx and dy pairs
         private readonly Dictionary<MoveDirection, (int, int)> _velocityVectors = new()
         {
@@ -21,13 +20,18 @@ namespace ReachTheFlag.Structure
             {MoveDirection.Down, (1, 0) },
         };
 
-        public GameState(GameBoard board, Point playerPosition)
+        public GameState(GameBoard board)
         {
             this.Board = board;
-            this.PlayerPosition = playerPosition;
+
+            this.PlayerPosition = Board.GetPlayerPosition();
+            if (this.PlayerPosition is null)
+            {
+                throw new Exception("Player cell is missing in board. Please provide a valid board.");
+            }
             this._playerPath = new List<MoveDirection>();
 
-            this.Board.GetCell(playerPosition.X, playerPosition.Y)?.OnPlayerEnter();
+            this.Board.GetCell(PlayerPosition.X, PlayerPosition.Y)?.OnPlayerEnter();
         }
 
         public bool IsFinal()
@@ -97,9 +101,8 @@ namespace ReachTheFlag.Structure
                 if (this.canPlayerMoveToDirection(direction))
                 {
                     GameBoard boardClone = this.Board.Clone();
-                    Point pointClone = this.PlayerPosition.Clone();
+                    GameState possibleState = new GameState(boardClone);
 
-                    GameState possibleState = new GameState(boardClone, pointClone);
                     possibleState.ShiftPlayerPosition(direction);
 
                     allPossibleStates.Add(direction, possibleState);
@@ -111,7 +114,7 @@ namespace ReachTheFlag.Structure
 
         public GameState Clone()
         {
-            return new GameState(this.Board.Clone(), this.PlayerPosition.Clone());
+            return new GameState(this.Board.Clone());
         }
 
         public override bool Equals(object obj)

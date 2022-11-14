@@ -1,8 +1,5 @@
 ﻿using ReachTheFlag.Cells;
 using ReachTheFlag.Structure;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace ReachTheFlag.Game
 {
@@ -18,16 +15,13 @@ namespace ReachTheFlag.Game
             throw new FileNotFoundException("File " + filename + " was not found.");
         }
 
-        private static BoardCell[,] convertListOfListsTo2DArray(List<List<BoardCell>> list)
+        private static BoardCell[][] convertListOfListsToJaggedArray(List<List<BoardCell>> list)
         {
-            BoardCell[,] board = new BoardCell[list.Count, list[0].Count];
+            BoardCell[][] board = new BoardCell[list.Count][];
 
             for (int i = 0; i < list.Count; i++)
             {
-                for (int j = 0; j < list[i].Count; j++)
-                {
-                    board[i, j] = list[i][j];
-                }
+                board[i] = list[i].ToArray();
             }
 
             return board;
@@ -55,7 +49,7 @@ namespace ReachTheFlag.Game
                 result.Add(cellsList);
             }
 
-            BoardCell[,] cellsArray = convertListOfListsTo2DArray(result);
+            BoardCell[][] cellsArray = convertListOfListsToJaggedArray(result);
 
             return new GameBoard(cellsArray);
         }

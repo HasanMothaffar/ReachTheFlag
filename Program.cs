@@ -1,30 +1,25 @@
 ﻿using ReachTheFlag.Game;
-using ReachTheFlag.Structure;
 
-ReachTheFlagGame game = new ReachTheFlagGame(new Point(0, 0));
+ReachTheFlagGame game = new ReachTheFlagGame();
 
 //Solver solver = new DFS();
 //solver.SolveGame(game);
 
-GameStatus status;
 
 game.PrintBoard();
 
+char pressedKey;
+GameStatus status;
+
 while ((status = game.GetStatus()) == GameStatus.Playing)
 {
-    char pressedKey = Console.ReadKey(true).KeyChar;
-
-    if (pressedKey == 'r' || pressedKey == 'R')
-    {
-        game.Restart();
-    }
-
+    pressedKey = Console.ReadKey(true).KeyChar;
     Console.Clear();
-    game.Update(pressedKey);
+    game.RespondToUserInput(pressedKey);
     game.PrintBoard();
 
-    //Console.WriteLine("\nPossible States:\n");
-    //game.PrintAllPossibleStates();
+    Console.WriteLine("\nPossible States:\n");
+    game.PrintAllPossibleStates();
 }
 
 if (status == GameStatus.Lose) Console.WriteLine("Player is stuck.");
