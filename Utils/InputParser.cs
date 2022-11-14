@@ -15,41 +15,22 @@ namespace ReachTheFlag.Game
             throw new FileNotFoundException("File " + filename + " was not found.");
         }
 
-        private static BoardCell[][] convertListOfListsToJaggedArray(List<List<BoardCell>> list)
-        {
-            BoardCell[][] board = new BoardCell[list.Count][];
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                board[i] = list[i].ToArray();
-            }
-
-            return board;
-        }
-
         public static GameBoard ParseInputBoard(string boardFilename)
         {
 
             string[] board = readBoardFile(boardFilename);
-
-            List<List<BoardCell>> result = new();
+            BoardCell[][] cellsArray = new BoardCell[board.Length][];
 
             for (int i = 0; i < board.Length; i++)
             {
-                List<BoardCell> cellsList = new();
-
-                // Convert board[i] to an array of characters
                 string[] characters = board[i].Select(c => c.ToString()).ToArray();
+                cellsArray[i] = new BoardCell[characters.Length];
 
                 for (int j = 0; j < characters.Length; j++)
                 {
-                    cellsList.Add(CellFactory.GetCell(i, j, characters[j]));
+                    cellsArray[i][j] = CellFactory.GetCell(i, j, characters[j]);
                 }
-
-                result.Add(cellsList);
             }
-
-            BoardCell[][] cellsArray = convertListOfListsToJaggedArray(result);
 
             return new GameBoard(cellsArray);
         }
