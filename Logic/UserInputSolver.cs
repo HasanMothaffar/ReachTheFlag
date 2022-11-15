@@ -2,7 +2,7 @@
 
 namespace ReachTheFlag.Logic
 {
-	public class UserInputSolver : GameSolver
+	public class UserInputSolver : IGameSolver
 	{
 		private readonly Dictionary<string, MoveDirection> _moveDirections = new()
 		{
@@ -19,10 +19,14 @@ namespace ReachTheFlag.Logic
             this._game = game;
         }
 
+        public string Name => "User Input";
+
 		public void Solve()
 		{
             char pressedKey;
             GameStatus status;
+
+            _game.PrintBoard();
 
             while ((status = _game.GetStatus()) == GameStatus.Playing)
             {

@@ -2,10 +2,12 @@
 using ReachTheFlag.Logic;
 
 ReachTheFlagGame game = new ReachTheFlagGame();
-GameSolver solver;
+IGameSolver solver;
 
-GameSolver GetSolveStrategyFromUserInput()
+IGameSolver GetSolveStrategyFromUserInput()
 {
+    // There has to be a way to iterate over all the classes that implement the IGameSolver interface
+    // and display them dynamically. I don't like hardcoding these values here...
     Console.WriteLine("Choose solving strategy:");
     Console.WriteLine("1: User input");
     Console.WriteLine("2: DFS");
@@ -31,6 +33,9 @@ void Main()
     // Make sure to show the board to users first
     game.PrintBoard();
     solver = GetSolveStrategyFromUserInput();
+    Console.Clear();
+
+    Console.WriteLine($"Chosen mode: {solver.Name}\n");
 
     var watch = solver.SolveAndGetElapsedTime();
     DisplayTimeStatistics(watch);

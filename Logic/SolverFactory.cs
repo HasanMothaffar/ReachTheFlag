@@ -4,7 +4,7 @@ namespace ReachTheFlag.Logic
 {
     public class SolverFactory
     {
-        public static GameSolver GetSolverForGame(ReachTheFlagGame game, string type)
+        public static IGameSolver GetSolverForGame(ReachTheFlagGame game, string type)
         {
             return type switch
             {

@@ -1,7 +1,8 @@
 ﻿namespace ReachTheFlag.Logic
 {
-    public interface GameSolver
+    public interface IGameSolver
     {
+        public string Name { get; }
         public void Solve();
         public System.Diagnostics.Stopwatch SolveAndGetElapsedTime()
         {

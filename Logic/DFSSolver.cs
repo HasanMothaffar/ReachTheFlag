@@ -4,9 +4,11 @@ using ReachTheFlag.Utils;
 
 namespace ReachTheFlag.Logic
 {
-    public class DFSSolver : GameSolver
+    public class DFSSolver : IGameSolver
     {
         private ReachTheFlagGame _game;
+
+        public string Name => "DFS";
 
         public DFSSolver(ReachTheFlagGame game)
         {
