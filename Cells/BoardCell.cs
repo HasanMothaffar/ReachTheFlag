@@ -42,5 +42,10 @@ namespace ReachTheFlag.Cells
 
             return ObjectComparerUtility.ObjectsAreEqual(this, other);
         }
+
+        public override string ToString()
+        {
+            return $"({X}, {Y})";
+        }
     }
 }
