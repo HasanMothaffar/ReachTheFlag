@@ -26,7 +26,8 @@ namespace ReachTheFlag.Cells
 
         public override bool IsValid()
         {
-            return true;
+            // Player should be standing on this cell to be considered valid
+            return this.IsPlayerVisiting;
         }
 
         public override void OnPlayerEnter()
