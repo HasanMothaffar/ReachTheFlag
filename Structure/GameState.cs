@@ -9,15 +9,15 @@ namespace ReachTheFlag.Structure
     {
         public readonly GameBoard Board;
         public readonly Point PlayerPosition;
-        private List<MoveDirection> _playerPath;
+        public readonly PlayerPath PlayerPath;
         
         // dx and dy pairs
         private readonly Dictionary<MoveDirection, (int, int)> _velocityVectors = new()
         {
-            {MoveDirection.Left, (0, -1) },
-            {MoveDirection.Right, (0, 1) },
-            {MoveDirection.Up, (-1, 0) },
-            {MoveDirection.Down, (1, 0) },
+            { MoveDirection.Left, (0, -1) },
+            { MoveDirection.Right, (0, 1) },
+            { MoveDirection.Up, (-1, 0) },
+            { MoveDirection.Down, (1, 0) },
         };
 
         public GameState(GameBoard board)
@@ -29,9 +29,12 @@ namespace ReachTheFlag.Structure
             {
                 throw new Exception("Player cell is missing in board. Please provide a valid board.");
             }
-            this._playerPath = new List<MoveDirection>();
 
-            this.Board.GetCell(PlayerPosition.X, PlayerPosition.Y)?.OnPlayerEnter();
+            this.PlayerPath = new PlayerPath();
+
+            BoardCell playerCell = this.Board.GetCell(PlayerPosition.X, PlayerPosition.Y);
+            playerCell.OnPlayerEnter();
+            PlayerPath.AddCell(playerCell);
         }
 
         public bool IsFinal()
@@ -81,14 +84,16 @@ namespace ReachTheFlag.Structure
         {
             if (this.canPlayerMoveToDirection(direction))
             {
-                _playerPath.Add(direction);
                 Board.GetCell(PlayerPosition.X, PlayerPosition.Y).OnPlayerLeave();
 
                 Point nextCellPosition = this.getNextCellPosition(direction);
                 PlayerPosition.X = nextCellPosition.X;
                 PlayerPosition.Y = nextCellPosition.Y;
 
-                Board.GetCell(nextCellPosition.X, nextCellPosition.Y).OnPlayerEnter();
+                BoardCell nextCell = Board.GetCell(nextCellPosition.X, nextCellPosition.Y);
+
+                PlayerPath.AddCell(nextCell);
+                nextCell.OnPlayerEnter();
             }
         }
 
@@ -122,11 +127,6 @@ namespace ReachTheFlag.Structure
             if (obj is not GameState other) return false;
 
             return this.Board.Equals(other.Board);
-        }
-        
-        public List<MoveDirection> GetPlayerPath()
-        {
-            return new List<MoveDirection>(_playerPath);
         }
     }
 }

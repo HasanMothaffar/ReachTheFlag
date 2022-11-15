@@ -21,7 +21,7 @@ namespace ReachTheFlag.Logic
 
         public string Name => "User Input";
 
-		public void Solve()
+        public void Solve()
 		{
             char pressedKey;
             GameStatus status;
@@ -38,6 +38,8 @@ namespace ReachTheFlag.Logic
 
             if (status == GameStatus.Lose) Console.WriteLine("Player is stuck.");
             else if (status == GameStatus.Win) Console.WriteLine("You won!");
+
+            _game.PrintPlayerPath();
 		}
 
 		private void respondToUserInput(char pressedKey)

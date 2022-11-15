@@ -8,8 +8,6 @@ namespace ReachTheFlag.Game
     {
         private const string MAP_FILE_PATH = "D:\\my-projects\\VersionTest\\ConsoleApp1\\map.txt";
 
-        private GameSolver _solveStrategy;
-
         // For restarting the game
         private readonly GameBoard _originalBoard;
         public GameState CurrentState { get; private set; }
@@ -38,6 +36,11 @@ namespace ReachTheFlag.Game
         public void PrintBoard()
         {
             Printer.PrintBoard(this.CurrentState.Board);
+        }
+
+        public void PrintPlayerPath()
+        {
+            Printer.PrintPlayerPath(this.CurrentState.PlayerPath);
         }
 
         public Dictionary<MoveDirection, GameState> GetAllPossibleStates()

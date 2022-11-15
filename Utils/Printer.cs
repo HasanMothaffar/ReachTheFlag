@@ -30,18 +30,31 @@ namespace ReachTheFlag.Utils
             Console.WriteLine();
         }
 
-        public static void PrintPlayerPath(List<MoveDirection> playerPath)
+        public static void PrintPlayerPath(PlayerPath path)
         {
-            foreach (var direction in playerPath)
+            var cells = path.GetCells();
+            Console.Write("Player path: ");
+
+            for (var i = 0; i < cells.Count; i++)
             {
-                Console.WriteLine(direction);
+                if (i == cells.Count - 1)
+                {
+                    Console.Write(cells[i]);
+                }
+
+                else
+                {
+                    Console.Write($"{cells[i]} -> ");
+                }
             }
+
+            Console.WriteLine();
         }
 
         public static void PrintState(GameState state)
         {
             PrintBoard(state.Board);
-            PrintPlayerPath(state.GetPlayerPath());
+            PrintPlayerPath(state.PlayerPath);
         }
     }
 }
