@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using ReachTheFlag.Cells;
+﻿using ReachTheFlag.Cells;
 using ReachTheFlag.Utils;
 
 namespace ReachTheFlag.Structure
@@ -9,18 +8,46 @@ namespace ReachTheFlag.Structure
 		private BoardCell[][] _cells;
 
 		public readonly int RowsCount;
-		public readonly int ColumnsCount;
 
 		public GameBoard(BoardCell[][] cells)
 		{
 			_cells = cells;
 			RowsCount = cells.Count();
-			ColumnsCount = cells[0].Count();
+			initializeBoardCellNeighbors();
 		}
 
-		public bool IsCellWithinBoundaries(int x, int y)
+        private void initializeBoardCellNeighbors()
+        {
+            foreach (var row in _cells)
+            {
+				foreach (var cell in row)
+				{
+					(int, int)[] possibleNeighborCoordinates =
+					{
+						(cell.X + 1, cell.Y),
+						(cell.X - 1, cell.Y),
+						(cell.X, cell.Y + 1),
+						(cell.X, cell.Y - 1)
+					};
+
+					foreach (var (x, y) in possibleNeighborCoordinates)
+					{
+						if (IsCellWithinBoundaries(x, y))
+						{
+							BoardCell candidateNeighbor = GetCell(x, y);
+							if (candidateNeighbor.CanBeVisited())
+							{
+                                cell.AddNeighbor(candidateNeighbor);
+                            }
+                        }
+					}
+                }
+            }
+        }
+
+        public bool IsCellWithinBoundaries(int x, int y)
 		{
-			return (x >= 0 && y >= 0 && x < RowsCount && y < ColumnsCount);
+			return (x >= 0 && y >= 0 && x < RowsCount && y < _cells[x].Length);
 		}
 
 		public bool AreAllCellsValid()
@@ -41,7 +68,7 @@ namespace ReachTheFlag.Structure
 			return IsCellWithinBoundaries(x, y) ? _cells[x][y] : null;
 		}
 
-		public Point? GetPlayerPosition()
+		public BoardCell? GetPlayerCell()
 		{
 			foreach (var row in _cells)
 			{
@@ -49,7 +76,7 @@ namespace ReachTheFlag.Structure
 				{
 					if (cell.IsPlayerVisiting)
 					{
-						return new Point(cell.X, cell.Y);
+						return cell;
 					}
 				}
 			}
@@ -57,15 +84,32 @@ namespace ReachTheFlag.Structure
 			return null;
 		}
 
+		public BoardCell? GetFlagCell()
+		{
+            foreach (var row in _cells)
+            {
+                foreach (var cell in row)
+                {
+                    if (cell.Symbol == CellPrintSymbols.Flag)
+                    {
+                        return cell;
+                    }
+                }
+            }
+
+            return null;
+        }
+
 		public BoardCell[][] GetAllCells()
 		{
 			BoardCell[][] allCells = new BoardCell[RowsCount][];
 
 			for (var i = 0; i < RowsCount; i++)
 			{
-				allCells[i] = new BoardCell[ColumnsCount];
+				int columnsCountForRow = _cells[i].Length;
+				allCells[i] = new BoardCell[columnsCountForRow];
 
-				for (var j = 0; j < ColumnsCount; j++)
+				for (var j = 0; j < columnsCountForRow; j++)
 				{
 					allCells[i][j] = _cells[i][j].Clone();
 				}
@@ -78,23 +122,6 @@ namespace ReachTheFlag.Structure
 		{
 			BoardCell[][] cellClones = GetAllCells();
 			return new GameBoard(cellClones);
-		}
-
-		public override bool Equals(object? obj)
-		{
-			if (obj is not GameBoard other) return false;
-
-			if (!(other.ColumnsCount == ColumnsCount && other.RowsCount == RowsCount)) return false;
-
-			for (var i = 0; i < RowsCount; i++)
-			{
-				for (var j = 0; j < ColumnsCount; j++)
-				{
-					if (!_cells[i][j].Equals(other._cells[i][j])) return false;
-				}
-			}
-
-			return true;
 		}
 	}
 }

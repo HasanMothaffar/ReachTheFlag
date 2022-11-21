@@ -9,7 +9,6 @@ namespace ReachTheFlag.Utils
         public static void PrintBoard(GameBoard board)
         {
             int rowsCount = board.RowsCount;
-            int columnsCount = board.ColumnsCount;
 
             BoardCell[][] cells = board.GetAllCells();
 
@@ -17,6 +16,7 @@ namespace ReachTheFlag.Utils
 
             for (var i = 0; i < rowsCount; i++)
             {
+                int columnsCount = cells[i].Length;
                 for (var j = 0; j < columnsCount; j++)
                 {
                     Console.ForegroundColor = cells[i][j].Color;
