@@ -12,6 +12,7 @@ IGameSolver GetSolveStrategyFromUserInput()
     Console.WriteLine("1: User input");
     Console.WriteLine("2: DFS");
     Console.WriteLine("3: BFS");
+    Console.WriteLine("4: Uniform Cost");
     Console.WriteLine("-----------");
 
     char pressedKey = Console.ReadKey(true).KeyChar;

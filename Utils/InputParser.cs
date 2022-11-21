@@ -15,20 +15,35 @@ namespace ReachTheFlag.Game
             throw new FileNotFoundException("File " + filename + " was not found.");
         }
 
+        private static (string cellType, int allowedNumberOfSteps, int weight) getCellInfo(string cellString)
+        {
+            string cellType = cellString[0].ToString();
+            int weight = int.Parse(cellString[2].ToString());
+            int allowedNumberOfSteps = 0;
+
+            try
+            {
+                allowedNumberOfSteps = int.Parse(cellString[1].ToString());
+            }
+            catch { }
+
+            return (cellType, allowedNumberOfSteps, weight);
+        }
+
         public static GameBoard ParseInputBoard(string boardFilename)
         {
-
             string[] board = readBoardFile(boardFilename);
             BoardCell[][] cellsArray = new BoardCell[board.Length][];
 
             for (int i = 0; i < board.Length; i++)
             {
-                string[] characters = board[i].Select(c => c.ToString()).ToArray();
-                cellsArray[i] = new BoardCell[characters.Length];
+                string[] cellsRow = board[i].Split(",");
+                cellsArray[i] = new BoardCell[cellsRow.Length];
 
-                for (int j = 0; j < characters.Length; j++)
+                for (var j = 0; j < cellsRow.Length; j++)
                 {
-                    cellsArray[i][j] = CellFactory.GetCell(i, j, characters[j]);
+                    (string cellType, int allowedNumberOfSteps, int weight) = getCellInfo(cellsRow[j]);
+                    cellsArray[i][j] = CellFactory.GetCell(i, j, cellType, allowedNumberOfSteps, weight);
                 }
             }
 

@@ -11,6 +11,8 @@ namespace ReachTheFlag.Logic
                 SolverTypes.UserInput => new UserInputSolver(game),
                 SolverTypes.DFS => new DFSSolver(game),
                 SolverTypes.BFS => new BFSSolver(game),
+                SolverTypes.UniformCost => new UniformCostSolver(game),
+
                 _ => new UserInputSolver(game)
             };
         }
@@ -21,5 +23,6 @@ namespace ReachTheFlag.Logic
         public const string UserInput = "1";
         public const string DFS = "2";
         public const string BFS = "3";
+        public const string UniformCost = "4";
     }
 }
