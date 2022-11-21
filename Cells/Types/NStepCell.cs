@@ -7,7 +7,7 @@
         private const ConsoleColor _playerIsVisitingColor = ConsoleColor.Yellow;
         private const ConsoleColor _noMoreAllowedStepsColor = ConsoleColor.Red;
 
-        public NStepCell(int x, int y, int allowedNumberOfSteps = 1) : base(x, y)
+        public NStepCell(int x, int y, int allowedNumberOfSteps = 1, int weight = 1) : base(x, y, weight)
         {
             this.Symbol = CellPrintSymbols.NStep;
             this.allowedNumberOfSteps = allowedNumberOfSteps;

@@ -6,6 +6,5 @@
         public const string Gap = "g";
         public const string Player = "*";
         public const string NStep = "o";
-        public const string InfiniteStep = "m";
     }
 }

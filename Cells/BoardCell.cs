@@ -2,50 +2,87 @@
 
 namespace ReachTheFlag.Cells
 {
-    public abstract class BoardCell : ICloneable<BoardCell>
+    public abstract class BoardCell : ICloneable<BoardCell>, IEquatable<BoardCell?>
     {
-        public string Symbol;
-        public ConsoleColor Color = ConsoleColor.White;
+        public readonly int X;
+        public readonly int Y;
+        public readonly int Weight;
+        public string Symbol { get; protected set; }
+        public ConsoleColor Color { get; protected set; }
 
-        public bool IsVisited = false;
-        public bool IsPlayerVisiting = false;
+        public bool IsVisited { get; private set; }
+        public bool IsPlayerVisiting { get; private set; }
 
-        public int X { get; init; }
-        public int Y { get; init; }
+        public readonly HashSet<BoardCell> Neighbors;
 
-        public BoardCell(int x, int y)
+        public BoardCell(int x, int y, int weight = 1)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
+            Weight = weight;
+
+            IsPlayerVisiting = false;
+            IsVisited = false;
+            Symbol = "default";
+            Color = ConsoleColor.White;
+
+            Neighbors = new HashSet<BoardCell>();
         }
 
-        public virtual void OnPlayerEnter() {
-            this.IsVisited = true;
-            this.IsPlayerVisiting = true;
+        public virtual void OnPlayerEnter()
+        {
+            IsVisited = true;
+            IsPlayerVisiting = true;
         }
 
-        public virtual void OnPlayerLeave() {
-            this.IsPlayerVisiting = false;
+        public virtual void OnPlayerLeave()
+        {
+            IsPlayerVisiting = false;
         }
 
         public abstract bool CanBeVisited();
         public abstract bool IsValid();
+
+        public void AddNeighbor(BoardCell cell)
+        {
+            Neighbors.Add(cell);
+        }
+
+        public List<BoardCell> GetNeighbors()
+        {
+            return Neighbors.ToList();
+        }
 
         public BoardCell Clone()
         {
             return (BoardCell)this.MemberwiseClone();
         }
 
-        public override bool Equals(object obj)
-        {
-            if (obj is not BoardCell other) return false;
-
-            return ObjectComparerUtility.ObjectsAreEqual(this, other);
-        }
-
         public override string ToString()
         {
             return $"({X}, {Y})";
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as BoardCell);
+        }
+
+        public bool Equals(BoardCell? other)
+        {
+            return other is not null &&
+                   Symbol == other.Symbol &&
+                   Color == other.Color &&
+                   IsVisited == other.IsVisited &&
+                   IsPlayerVisiting == other.IsPlayerVisiting &&
+                   X == other.X &&
+                   Y == other.Y &&
+                   Weight == other.Weight;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y);
         }
     }
 }

@@ -1,52 +1,26 @@
-﻿using System;
-
-namespace ReachTheFlag.Cells
+﻿namespace ReachTheFlag.Cells
 {
     public class CellFactory
     {
-        public static BoardCell GetCell(int x, int y, string type)
+        public static BoardCell GetCell(int x, int y, string type, int allowedNumberOfSteps = 0, int weight = 1)
         {
             switch (type)
             {
                 case CellTypes.Flag:
-                    {
-                        return new FlagCell(x, y);
-                    }
-
+                    return new FlagCell(x, y, weight);
                 case CellTypes.Gap:
-                    {
-                        return new GapCell(x, y);
-                    }
-
-                case CellTypes.InfiniteStep:
-                    {
-                        return new InfiniteStepCell(x, y);
-                    }
+                    return new GapCell(x, y);
 
                 case CellTypes.Player:
                     {
-                        BoardCell cell = new NStepCell(x, y, 1)
-                        {
-                            IsPlayerVisiting = true
-                        };
-
+                        BoardCell cell = new NStepCell(x, y, allowedNumberOfSteps, weight);
+                        cell.OnPlayerEnter();
                         return cell;
                     }
-
-
+                case CellTypes.NStep:
+                    return new NStepCell(x, y, allowedNumberOfSteps, weight);
                 default:
-                    {
-                        try
-                        {
-                            int numberOfAllowedSteps = Int32.Parse(type);
-                            return new NStepCell(x, y, numberOfAllowedSteps);
-                        }
-
-                        catch
-                        {
-                            return new NStepCell(x, y, 1);
-                        }
-                    }
+                    return new NStepCell(x, y, weight);
             }
         }
     }
@@ -55,7 +29,7 @@ namespace ReachTheFlag.Cells
     {
         public const string Flag = "f";
         public const string Gap = "g";
-        public const string InfiniteStep = "m";
         public const string Player = "p";
+        public const string NStep = "n";
     }
 }

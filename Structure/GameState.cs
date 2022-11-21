@@ -4,11 +4,11 @@ using ReachTheFlag.Utils;
 
 namespace ReachTheFlag.Structure
 {
-
     public class GameState: ICloneable<GameState>
     {
+        private readonly Point _playerPosition;
+
         public readonly GameBoard Board;
-        public readonly Point PlayerPosition;
         public readonly PlayerPath PlayerPath;
         
         // dx and dy pairs
@@ -23,17 +23,16 @@ namespace ReachTheFlag.Structure
         public GameState(GameBoard board)
         {
             this.Board = board;
+            BoardCell playerCell = this.Board.GetPlayerCell();
 
-            this.PlayerPosition = Board.GetPlayerPosition();
-            if (this.PlayerPosition is null)
+            if (playerCell is null)
             {
                 throw new Exception("Player cell is missing in board. Please provide a valid board.");
             }
 
             this.PlayerPath = new PlayerPath();
+            this._playerPosition = new Point(playerCell.X, playerCell.Y);
 
-            BoardCell playerCell = this.Board.GetCell(PlayerPosition.X, PlayerPosition.Y);
-            playerCell.OnPlayerEnter();
             PlayerPath.AddCell(playerCell);
         }
 
@@ -58,8 +57,8 @@ namespace ReachTheFlag.Structure
         {
             (int dx, int dy) = this._velocityVectors[direction];
 
-            int x = dx + PlayerPosition.X;
-            int y = dy + PlayerPosition.Y;
+            int x = dx + _playerPosition.X;
+            int y = dy + _playerPosition.Y;
 
             /**
 			 * The board's layout is like this:
@@ -84,11 +83,11 @@ namespace ReachTheFlag.Structure
         {
             if (this.canPlayerMoveToDirection(direction))
             {
-                Board.GetCell(PlayerPosition.X, PlayerPosition.Y).OnPlayerLeave();
+                Board.GetCell(_playerPosition.X, _playerPosition.Y).OnPlayerLeave();
 
                 Point nextCellPosition = this.getNextCellPosition(direction);
-                PlayerPosition.X = nextCellPosition.X;
-                PlayerPosition.Y = nextCellPosition.Y;
+                _playerPosition.X = nextCellPosition.X;
+                _playerPosition.Y = nextCellPosition.Y;
 
                 BoardCell nextCell = Board.GetCell(nextCellPosition.X, nextCellPosition.Y);
 
@@ -120,13 +119,6 @@ namespace ReachTheFlag.Structure
         public GameState Clone()
         {
             return new GameState(this.Board.Clone());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is not GameState other) return false;
-
-            return this.Board.Equals(other.Board);
         }
     }
 }

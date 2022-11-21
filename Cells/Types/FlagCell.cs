@@ -7,7 +7,7 @@ namespace ReachTheFlag.Cells
         private const ConsoleColor _onPlayerEnterColor = ConsoleColor.Green;
         private const ConsoleColor _originalColor = ConsoleColor.Magenta;
 
-        public FlagCell(int x, int y) : base(x, y)
+        public FlagCell(int x, int y, int weight = 1) : base(x, y, weight)
         {
             this.Symbol = CellPrintSymbols.Flag;
             this.Color = _originalColor;
