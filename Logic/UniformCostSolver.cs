@@ -1,5 +1,6 @@
 ﻿using ReachTheFlag.Cells;
 using ReachTheFlag.Game;
+using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Logic
 {
@@ -13,7 +14,7 @@ namespace ReachTheFlag.Logic
             _game = game;
         }
 
-        private int[][] getDistancesArrayForCells(BoardCell[][] cells)
+        private int[][] getDistancesArray(BoardCell[][] cells)
         {
             int rowsCount = cells.Length;
             int[][] dist = new int[rowsCount][];
@@ -25,63 +26,95 @@ namespace ReachTheFlag.Logic
 
                 for (var j = 0; j < columnsCount; j++)
                 {
-                    dist[i][j] = int.MaxValue;
+                    dist[i][j] = cells[i][j].IsPlayerVisiting ? 0 : int.MaxValue;
                 }
             }
 
             return dist;
         }
 
+        private BoardCell[][] getParentsArray(BoardCell[][] cells)
+        {
+            BoardCell[][] parents = new BoardCell[cells.Length][];
+            for (int i = 0; i < cells.Length; i++)
+            {
+                parents[i] = new BoardCell[cells[i].Length];
+                for (int j = 0; j < parents[i].Length; j++)
+                {
+                    parents[i][j] = null;
+                }
+            }
+
+            return parents;
+        }
+
         public void Solve()
         {
-            BoardCell[][] cells = _game.CurrentState.Board.GetAllCells();
-            BoardCell startingCell = _game.CurrentState.Board.GetPlayerCell();
+            GameState initialState = _game.CurrentState;
+            BoardCell[][] cells = initialState.Board.GetAllCells();
 
-            Dictionary<BoardCell, BoardCell> parents = new();
-            parents.Add(startingCell, null);
+            // Dijkstra Data structures
+            PriorityQueue<GameState, int> queue = new();
+            int[][] dist = getDistancesArray(cells);
 
-            int[][] dist = getDistancesArrayForCells(cells);
-            dist[startingCell.X][startingCell.Y] = 0;
+            // For printing the path
+            BoardCell[][] cellParents = getParentsArray(cells);
 
-            PriorityQueue<BoardCell, int> queue = new();
-            queue.Enqueue(startingCell, startingCell.Weight);
+            queue.Enqueue(initialState, initialState.Weight);
 
             while (queue.Count > 0)
             {
-                var cell = queue.Dequeue();
+                GameState state = queue.Dequeue();
 
-                foreach (var neighbor in cell.Neighbors)
+                foreach (KeyValuePair<MoveDirection, GameState> kvp in state.GetAllNeighboringStates())
                 {
-                    int possibleShortestDistance = dist[cell.X][cell.Y] + neighbor.Weight;
+                    GameState neighbor = kvp.Value;
+                    int possibleShortestDistance = dist[state.X][state.Y] + neighbor.Weight;
 
                     if (possibleShortestDistance < dist[neighbor.X][neighbor.Y])
                     {
                         queue.Enqueue(neighbor, possibleShortestDistance);
                         dist[neighbor.X][neighbor.Y] = possibleShortestDistance;
-                        parents.Add(neighbor, cell);
+                        cellParents[neighbor.X][neighbor.Y] = _game.CurrentState.Board.GetCell(state.X, state.Y);
                     }
                 }
             }
 
-            for (int i = 0; i < cells.Length; i++)
+            printShortestPath(cellParents);
+            printShortestPathCost(dist);
+        }
+
+        private void printShortestPath(BoardCell[][] cellParents)
+        {
+            var flagCell = _game.CurrentState.Board.FlagCell;
+
+            Console.WriteLine("\nPlayer path: \n");
+            BoardCell cell = cellParents[flagCell.X][flagCell.Y];
+
+            // Print parents of flag cell in reverse order
+            while (cell is not null)
             {
-                for (int j = 0; j < cells[i].Length; j++)
+                Console.WriteLine(cell);
+                cell = cellParents[cell.X][cell.Y];
+            }
+
+            Console.WriteLine();
+        }
+
+        private void printShortestPathCost(int[][] dist)
+        {
+            var flagCell = _game.CurrentState.Board.FlagCell;
+            Console.WriteLine($"Shortest path cost: {dist[flagCell.X][flagCell.Y]}");
+            Console.WriteLine("All distances from player:\n");
+
+            foreach (var row in dist)
+            {
+                foreach (var entry in row)
                 {
-                    Console.Write(dist[i][j] + " ");
+                    Console.Write($"{entry} ");
                 }
 
                 Console.WriteLine();
-            }
-
-            BoardCell flagCell = _game.CurrentState.Board.GetFlagCell();
-
-            var parent = parents[flagCell];
-
-            // Print parents of flag cell in reverse order
-            while (parent is not null)
-            {
-                Console.WriteLine(parent);
-                parent = parents[parent];
             }
         }
     }

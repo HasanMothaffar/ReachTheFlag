@@ -13,8 +13,6 @@ namespace ReachTheFlag.Cells
         public bool IsVisited { get; private set; }
         public bool IsPlayerVisiting { get; private set; }
 
-        public readonly HashSet<BoardCell> Neighbors;
-
         public BoardCell(int x, int y, int weight = 1)
         {
             X = x;
@@ -25,8 +23,6 @@ namespace ReachTheFlag.Cells
             IsVisited = false;
             Symbol = "default";
             Color = ConsoleColor.White;
-
-            Neighbors = new HashSet<BoardCell>();
         }
 
         public virtual void OnPlayerEnter()
@@ -42,16 +38,6 @@ namespace ReachTheFlag.Cells
 
         public abstract bool CanBeVisited();
         public abstract bool IsValid();
-
-        public void AddNeighbor(BoardCell cell)
-        {
-            Neighbors.Add(cell);
-        }
-
-        public List<BoardCell> GetNeighbors()
-        {
-            return Neighbors.ToList();
-        }
 
         public BoardCell Clone()
         {
@@ -82,7 +68,7 @@ namespace ReachTheFlag.Cells
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(X, Y);
+            return HashCode.Combine(X, Y, Weight);
         }
     }
 }

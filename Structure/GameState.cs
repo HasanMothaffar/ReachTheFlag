@@ -6,11 +6,16 @@ namespace ReachTheFlag.Structure
 {
     public class GameState: ICloneable<GameState>
     {
-        private readonly Point _playerPosition;
+        private BoardCell _playerCell;
 
         public readonly GameBoard Board;
         public readonly PlayerPath PlayerPath;
-        
+        public GameState ParentState { get; set; }
+
+        public int Weight => _playerCell.Weight;
+        public int X => _playerCell.X;
+        public int Y => _playerCell.Y;
+
         // dx and dy pairs
         private readonly Dictionary<MoveDirection, (int, int)> _velocityVectors = new()
         {
@@ -30,9 +35,9 @@ namespace ReachTheFlag.Structure
                 throw new Exception("Player cell is missing in board. Please provide a valid board.");
             }
 
-            this.PlayerPath = new PlayerPath();
-            this._playerPosition = new Point(playerCell.X, playerCell.Y);
+            this._playerCell = playerCell;
 
+            this.PlayerPath = new PlayerPath();
             PlayerPath.AddCell(playerCell);
         }
 
@@ -53,12 +58,12 @@ namespace ReachTheFlag.Structure
             return !canPlayerMove;
         }
 
-        private Point getNextCellPosition(MoveDirection direction)
+        private BoardCell getNextPlayerCell(MoveDirection direction)
         {
             (int dx, int dy) = this._velocityVectors[direction];
 
-            int x = dx + _playerPosition.X;
-            int y = dy + _playerPosition.Y;
+            int x = dx + _playerCell.X;
+            int y = dy + _playerCell.Y;
 
             /**
 			 * The board's layout is like this:
@@ -67,13 +72,13 @@ namespace ReachTheFlag.Structure
 			 * (1, 0) (1, 1) (1, 2)
 			 * (2, 0) (2, 1) (2, 2)
 			 */
-            return new Point(x, y);
+
+            return Board.GetCell(x, y);
         }
 
         private bool canPlayerMoveToDirection(MoveDirection direction)
         {
-            Point nextCellPosition = this.getNextCellPosition(direction);
-            BoardCell? cell = Board.GetCell(nextCellPosition.X, nextCellPosition.Y);
+            BoardCell? cell = this.getNextPlayerCell(direction);
 
             if (cell is null) return false;
             return cell.CanBeVisited();
@@ -83,22 +88,19 @@ namespace ReachTheFlag.Structure
         {
             if (this.canPlayerMoveToDirection(direction))
             {
-                Board.GetCell(_playerPosition.X, _playerPosition.Y).OnPlayerLeave();
+                _playerCell.OnPlayerLeave();
 
-                Point nextCellPosition = this.getNextCellPosition(direction);
-                _playerPosition.X = nextCellPosition.X;
-                _playerPosition.Y = nextCellPosition.Y;
+                BoardCell nextPlayerCell = this.getNextPlayerCell(direction);
+                _playerCell = nextPlayerCell;
 
-                BoardCell nextCell = Board.GetCell(nextCellPosition.X, nextCellPosition.Y);
-
-                PlayerPath.AddCell(nextCell);
-                nextCell.OnPlayerEnter();
+                PlayerPath.AddCell(nextPlayerCell);
+                nextPlayerCell.OnPlayerEnter();
             }
         }
 
-        public Dictionary<MoveDirection, GameState> GetAllPossibleStates()
+        public Dictionary<MoveDirection, GameState> GetAllNeighboringStates()
         {
-            Dictionary<MoveDirection, GameState> allPossibleStates = new Dictionary<MoveDirection, GameState>();
+            Dictionary<MoveDirection, GameState> neighbors = new Dictionary<MoveDirection, GameState>();
 
             foreach (MoveDirection direction in Enum.GetValues(typeof(MoveDirection)))
             {
@@ -109,11 +111,11 @@ namespace ReachTheFlag.Structure
 
                     possibleState.ShiftPlayerPosition(direction);
 
-                    allPossibleStates.Add(direction, possibleState);
+                    neighbors.Add(direction, possibleState);
                 }
             }
 
-            return allPossibleStates;
+            return neighbors;
         }
 
         public GameState Clone()

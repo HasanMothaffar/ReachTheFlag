@@ -8,41 +8,29 @@ namespace ReachTheFlag.Structure
 		private BoardCell[][] _cells;
 
 		public readonly int RowsCount;
+		public readonly BoardCell FlagCell;
 
 		public GameBoard(BoardCell[][] cells)
 		{
 			_cells = cells;
 			RowsCount = cells.Count();
-			initializeBoardCellNeighbors();
+			FlagCell = getFlagCell();
 		}
 
-        private void initializeBoardCellNeighbors()
+        private BoardCell? getFlagCell()
         {
             foreach (var row in _cells)
             {
-				foreach (var cell in row)
-				{
-					(int, int)[] possibleNeighborCoordinates =
-					{
-						(cell.X + 1, cell.Y),
-						(cell.X - 1, cell.Y),
-						(cell.X, cell.Y + 1),
-						(cell.X, cell.Y - 1)
-					};
-
-					foreach (var (x, y) in possibleNeighborCoordinates)
-					{
-						if (IsCellWithinBoundaries(x, y))
-						{
-							BoardCell candidateNeighbor = GetCell(x, y);
-							if (candidateNeighbor.CanBeVisited())
-							{
-                                cell.AddNeighbor(candidateNeighbor);
-                            }
-                        }
-					}
+                foreach (var cell in row)
+                {
+                    if (cell.Symbol == CellPrintSymbols.Flag)
+                    {
+                        return cell;
+                    }
                 }
             }
+
+            return null;
         }
 
         public bool IsCellWithinBoundaries(int x, int y)
@@ -83,22 +71,6 @@ namespace ReachTheFlag.Structure
 
 			return null;
 		}
-
-		public BoardCell? GetFlagCell()
-		{
-            foreach (var row in _cells)
-            {
-                foreach (var cell in row)
-                {
-                    if (cell.Symbol == CellPrintSymbols.Flag)
-                    {
-                        return cell;
-                    }
-                }
-            }
-
-            return null;
-        }
 
 		public BoardCell[][] GetAllCells()
 		{
