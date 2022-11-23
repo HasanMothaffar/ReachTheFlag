@@ -45,12 +45,12 @@ namespace ReachTheFlag.Game
 
         public Dictionary<MoveDirection, GameState> GetAllPossibleStates()
         {
-            return CurrentState.GetAllPossibleStates();
+            return CurrentState.GetAllNeighboringStates();
         }
 
         public void PrintAllPossibleStates()
         {
-            var states = this.CurrentState.GetAllPossibleStates();
+            var states = this.CurrentState.GetAllNeighboringStates();
             foreach (KeyValuePair<MoveDirection, GameState> kvp in states)
             {
                 Console.WriteLine("Direction: {0} - Final State: {1}", kvp.Key, kvp.Value.IsFinal());

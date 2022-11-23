@@ -32,7 +32,7 @@ namespace ReachTheFlag.Logic
             {
                 GameState state = stateStack.Pop();
 
-                foreach (KeyValuePair<MoveDirection, GameState> kvp in state.GetAllPossibleStates())
+                foreach (KeyValuePair<MoveDirection, GameState> kvp in state.GetAllNeighboringStates())
                 {
                     GameState stateNode = kvp.Value;
 
