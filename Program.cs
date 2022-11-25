@@ -1,45 +1,43 @@
 ﻿using ReachTheFlag.Game;
 using ReachTheFlag.Logic;
 
-ReachTheFlagGame game = new ReachTheFlagGame();
-IGameSolver solver;
-
-IGameSolver GetSolveStrategyFromUserInput()
-{
-    // There has to be a way to iterate over all the classes that implement the IGameSolver interface
-    // and display them dynamically. I don't like hardcoding these values here...
+SolverStrategy GetSolveStrategyFromUserInput()
+{    
     Console.WriteLine("Choose solving strategy:");
-    Console.WriteLine("1: User input");
-    Console.WriteLine("2: DFS");
-    Console.WriteLine("3: BFS");
-    Console.WriteLine("4: Uniform Cost");
+    foreach (SolverStrategy solverType in Enum.GetValues(typeof(SolverStrategy)))
+    {
+        Console.WriteLine($"{(int)solverType}: {solverType}");
+    }
+
     Console.WriteLine("-----------");
 
     char pressedKey = Console.ReadKey(true).KeyChar;
     string type = pressedKey.ToString();
 
-    solver = SolverFactory.GetSolverForGame(game, type);
+    SolverStrategy solverStrategy;
 
-    return solver;
-}
+    try
+    {
+        Enum.TryParse(type, out SolverStrategy solverType);
+        solverStrategy = solverType;
+    }
 
-void DisplayTimeStatistics(System.Diagnostics.Stopwatch watch)
-{
-    var elapsedTimeInSeconds = watch.Elapsed.TotalSeconds;
-    Console.WriteLine("Elapsed time: {0}", elapsedTimeInSeconds);
+    catch
+    {
+        Console.WriteLine("Unknown key was input: Falling back to user input strategy.");
+        solverStrategy = SolverStrategy.UserInput;
+    }
+
+    return solverStrategy;
 }
 
 void Main()
 {
-    // Make sure to show the board to users first
-    game.PrintBoard();
-    solver = GetSolveStrategyFromUserInput();
-    Console.Clear();
+    string mapFilePath = "D:\\my-projects\\VersionTest\\ConsoleApp1\\map.txt";
+    ReachTheFlagGame game = new ReachTheFlagGame(mapFilePath);
+    SolverStrategy strategy = GetSolveStrategyFromUserInput();
 
-    Console.WriteLine($"Chosen mode: {solver.Name}\n");
-
-    var watch = solver.SolveAndGetElapsedTime();
-    DisplayTimeStatistics(watch);
+    game.Solve(strategy);
 }
 
 Main();

@@ -6,62 +6,41 @@ namespace ReachTheFlag.Game
 {
     public class ReachTheFlagGame
     {
-        private const string MAP_FILE_PATH = "D:\\my-projects\\VersionTest\\ConsoleApp1\\map.txt";
-
         // For restarting the game
         private readonly GameBoard _originalBoard;
-        public GameState CurrentState { get; private set; }
+        private GameState _currentState;
 
-        public ReachTheFlagGame()
+        public ReachTheFlagGame(string mapFilePath)
         {
-            GameBoard parsedBoard = InputParser.ParseInputBoard(MAP_FILE_PATH);
+            GameBoard parsedBoard = MapParser.ParseBoardMap(mapFilePath);
 
-            this.CurrentState = new GameState(parsedBoard);
+            this._currentState = new GameState(parsedBoard);
             this._originalBoard = parsedBoard.Clone();
+
+            Printer.PrintBoard(this._currentState.Board);
         }
 
         public GameStatus GetStatus()
         {
-            if (CurrentState.IsFinal()) return GameStatus.Win;
-            if (CurrentState.IsPlayerStuck()) return GameStatus.Lose;
+            if (_currentState.IsFinal()) return GameStatus.Win;
+            if (_currentState.IsPlayerStuck()) return GameStatus.Lose;
 
             return GameStatus.Playing;
         }
 
-        public bool IsFinal()
-        {
-            return CurrentState.IsFinal();
-        }
-
-        public void PrintBoard()
-        {
-            Printer.PrintBoard(this.CurrentState.Board);
-        }
-
-        public void PrintPlayerPath()
-        {
-            Printer.PrintPlayerPath(this.CurrentState.PlayerPath);
-        }
-
-        public Dictionary<MoveDirection, GameState> GetAllPossibleStates()
-        {
-            return CurrentState.GetAllNeighboringStates();
-        }
-
-        public void PrintAllPossibleStates()
-        {
-            var states = this.CurrentState.GetAllNeighboringStates();
-            foreach (KeyValuePair<MoveDirection, GameState> kvp in states)
-            {
-                Console.WriteLine("Direction: {0} - Final State: {1}", kvp.Key, kvp.Value.IsFinal());
-                Printer.PrintBoard(kvp.Value.Board);
-                Console.WriteLine("------");
-            }
-        }
-
         public void Restart()
         {
-            this.CurrentState = new GameState(this._originalBoard);
+            this._currentState = new GameState(this._originalBoard);
+        }
+
+        public void Solve(SolverStrategy strategy)
+        {
+            GameSolver solver = SolverFactory.GetSolverForGame(strategy, _currentState);
+            Console.Clear();
+            Console.WriteLine($"Chosen strategy: {solver.Name}");
+
+            var watch = solver.SolveAndGetElapsedTime();
+            Printer.PrintTimeStatistics(watch);
         }
     }
 }

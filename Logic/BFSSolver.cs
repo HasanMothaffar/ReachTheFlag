@@ -1,30 +1,16 @@
-﻿using ReachTheFlag.Cells;
-using ReachTheFlag.Game;
+﻿using ReachTheFlag.Game;
 using ReachTheFlag.Structure;
 using ReachTheFlag.Utils;
 
 namespace ReachTheFlag.Logic
 {
-    public class BFSSolver : IGameSolver
+    public class BFSSolver : GameSolver
     {
-        private ReachTheFlagGame _game;
+        public BFSSolver(GameState initialNode) : base("BFS", initialNode) { }
 
-        public string Name => "BFS";
-
-        public BFSSolver(ReachTheFlagGame game)
+        public override void Solve()
         {
-            this._game = game;
-        }
-
-        public void Solve()
-        {
-            if (_game.IsFinal())
-            {
-                Console.WriteLine("Game is already solved.");
-                return;
-            }
-
-            GameState initialState = _game.CurrentState;
+            GameState initialState = this.InitialNode;
             Queue<GameState> stateQueue = new();
 
             stateQueue.Enqueue(initialState);
@@ -52,7 +38,7 @@ namespace ReachTheFlag.Logic
                 }
             }
 
-            Console.WriteLine("Game is impossible to solve.");
+            throw new Exception("Game is impossible to solve.");
         }
     }
 }

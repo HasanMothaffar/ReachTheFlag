@@ -3,9 +3,9 @@ using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Game
 {
-    public class InputParser
+    public class MapParser
     {
-        private static string[] readBoardFile(string filename)
+        private static string[] readBoardMapFile(string filename)
         {
             if (File.Exists(filename))
             {
@@ -30,9 +30,9 @@ namespace ReachTheFlag.Game
             return (cellType, allowedNumberOfSteps, weight);
         }
 
-        public static GameBoard ParseInputBoard(string boardFilename)
+        public static GameBoard ParseBoardMap(string boardFilename)
         {
-            string[] board = readBoardFile(boardFilename);
+            string[] board = readBoardMapFile(boardFilename);
             BoardCell[][] cellsArray = new BoardCell[board.Length][];
 
             for (int i = 0; i < board.Length; i++)

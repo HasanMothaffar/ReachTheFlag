@@ -1,28 +1,21 @@
 ﻿using ReachTheFlag.Game;
+using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Logic
 {
     public class SolverFactory
     {
-        public static IGameSolver GetSolverForGame(ReachTheFlagGame game, string type)
+        public static GameSolver GetSolverForGame(SolverStrategy strategy, GameState initialNode)
         {
-            return type switch
+            return strategy switch
             {
-                SolverTypes.UserInput => new UserInputSolver(game),
-                SolverTypes.DFS => new DFSSolver(game),
-                SolverTypes.BFS => new BFSSolver(game),
-                SolverTypes.UniformCost => new UniformCostSolver(game),
+                SolverStrategy.UserInput => new UserInputSolver(initialNode),
+                SolverStrategy.DFS => new DFSSolver(initialNode),
+                SolverStrategy.BFS => new BFSSolver(initialNode),
+                SolverStrategy.UniformCost => new UniformCostSolver(initialNode),
 
-                _ => new UserInputSolver(game)
+                _ => new UserInputSolver(initialNode)
             };
         }
-    }
-
-    public static class SolverTypes
-    {
-        public const string UserInput = "1";
-        public const string DFS = "2";
-        public const string BFS = "3";
-        public const string UniformCost = "4";
     }
 }

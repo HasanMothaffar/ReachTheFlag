@@ -10,7 +10,6 @@ namespace ReachTheFlag.Structure
 
         public readonly GameBoard Board;
         public readonly PlayerPath PlayerPath;
-        public GameState ParentState { get; set; }
 
         public int Weight => _playerCell.Weight;
         public int X => _playerCell.X;

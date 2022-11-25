@@ -56,5 +56,11 @@ namespace ReachTheFlag.Utils
             PrintBoard(state.Board);
             PrintPlayerPath(state.PlayerPath);
         }
+
+        public static void PrintTimeStatistics(System.Diagnostics.Stopwatch watch)
+        {
+            var elapsedTimeInSeconds = watch.Elapsed.TotalSeconds;
+            Console.WriteLine("Elapsed time: {0}", elapsedTimeInSeconds);
+        }
     }
 }

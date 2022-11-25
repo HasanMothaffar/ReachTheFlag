@@ -4,26 +4,13 @@ using ReachTheFlag.Utils;
 
 namespace ReachTheFlag.Logic
 {
-    public class DFSSolver : IGameSolver
+    public class DFSSolver : GameSolver
     {
-        private ReachTheFlagGame _game;
+        public DFSSolver(GameState initialNode) : base("DFS", initialNode) { }
 
-        public string Name => "DFS";
-
-        public DFSSolver(ReachTheFlagGame game)
+        public override void Solve()
         {
-            this._game = game;
-        }
-
-        public void Solve()
-        {
-            if (_game.IsFinal())
-            {
-                Console.WriteLine("Game is already solved.");
-                return;
-            }
-
-            GameState initialState = _game.CurrentState;
+            GameState initialState = this.InitialNode;
             Stack<GameState> stateStack = new();
 
             stateStack.Push(initialState);
@@ -51,7 +38,7 @@ namespace ReachTheFlag.Logic
                 }
             }
 
-            Console.WriteLine("Game is impossible to solve.");
+            throw new Exception("Game is impossible to solve.");
         }
     }
 }

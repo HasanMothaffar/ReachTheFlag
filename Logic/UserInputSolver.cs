@@ -1,10 +1,12 @@
 ﻿using ReachTheFlag.Game;
+using ReachTheFlag.Structure;
+using ReachTheFlag.Utils;
 
 namespace ReachTheFlag.Logic
 {
-	public class UserInputSolver : IGameSolver
+	public class UserInputSolver : GameSolver
 	{
-		private readonly Dictionary<string, MoveDirection> _moveDirections = new()
+        private readonly Dictionary<string, MoveDirection> _moveDirections = new()
 		{
 			{ "a", MoveDirection.Left },
 			{ "d", MoveDirection.Right },
@@ -12,34 +14,37 @@ namespace ReachTheFlag.Logic
 			{ "s", MoveDirection.Down },
 		};
 
-        private ReachTheFlagGame _game;
+        public UserInputSolver(GameState initialNode) : base("User Input", initialNode) { }
 
-        public UserInputSolver(ReachTheFlagGame game)
-        {
-            this._game = game;
-        }
-
-        public string Name => "User Input";
-
-        public void Solve()
+        public override void Solve()
 		{
             char pressedKey;
-            GameStatus status;
 
-            _game.PrintBoard();
+            Printer.PrintBoard(InitialNode.Board);
 
-            while ((status = _game.GetStatus()) == GameStatus.Playing)
+            while (true)
             {
                 pressedKey = Console.ReadKey(true).KeyChar;
                 Console.Clear();
                 respondToUserInput(pressedKey);
-                _game.PrintBoard();
+                Printer.PrintBoard(InitialNode.Board);
+
+                // Don't change the order of these conditions!
+                // If the game is final, the player is technically considered stuck.
+                if (InitialNode.IsFinal())
+                {
+                    Console.WriteLine("You won!");
+                    break;
+                }
+
+                if (InitialNode.IsPlayerStuck())
+                {
+                    Console.WriteLine("Player is stuck.");
+                    break;
+                }
             }
 
-            if (status == GameStatus.Lose) Console.WriteLine("Player is stuck.");
-            else if (status == GameStatus.Win) Console.WriteLine("You won!");
-
-            _game.PrintPlayerPath();
+            Printer.PrintPlayerPath(InitialNode.PlayerPath);
 		}
 
 		private void respondToUserInput(char pressedKey)
@@ -50,7 +55,7 @@ namespace ReachTheFlag.Logic
             {
                 MoveDirection direction = this._moveDirections[lowerCaseKey];
                 Console.WriteLine($"Move direction: {direction}");
-                _game.CurrentState.ShiftPlayerPosition(direction);
+                this.InitialNode.ShiftPlayerPosition(direction);
             }
         }
 	}

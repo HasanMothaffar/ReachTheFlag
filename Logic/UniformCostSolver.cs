@@ -4,15 +4,9 @@ using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Logic
 {
-    internal class UniformCostSolver : IGameSolver
+    internal class UniformCostSolver : GameSolver
     {
-        public string Name => "Uniform Cost";
-        private ReachTheFlagGame _game;
-
-        public UniformCostSolver(ReachTheFlagGame game)
-        {
-            _game = game;
-        }
+        public UniformCostSolver(GameState initialNode) : base("Uniform Cost", initialNode) { }
 
         private int[][] getDistancesArray(BoardCell[][] cells)
         {
@@ -48,9 +42,9 @@ namespace ReachTheFlag.Logic
             return parents;
         }
 
-        public void Solve()
+        public override void Solve()
         {
-            GameState initialState = _game.CurrentState;
+            GameState initialState = this.InitialNode;
             BoardCell[][] cells = initialState.Board.GetAllCells();
 
             // Dijkstra Data structures
@@ -75,7 +69,7 @@ namespace ReachTheFlag.Logic
                     {
                         queue.Enqueue(neighbor, possibleShortestDistance);
                         dist[neighbor.X][neighbor.Y] = possibleShortestDistance;
-                        cellParents[neighbor.X][neighbor.Y] = _game.CurrentState.Board.GetCell(state.X, state.Y);
+                        cellParents[neighbor.X][neighbor.Y] = this.InitialNode.Board.GetCell(state.X, state.Y);
                     }
                 }
             }
@@ -86,7 +80,7 @@ namespace ReachTheFlag.Logic
 
         private void printShortestPath(BoardCell[][] cellParents)
         {
-            var flagCell = _game.CurrentState.Board.FlagCell;
+            var flagCell = this.InitialNode.Board.FlagCell;
 
             Console.WriteLine("\nPlayer path: \n");
             BoardCell cell = cellParents[flagCell.X][flagCell.Y];
@@ -103,7 +97,7 @@ namespace ReachTheFlag.Logic
 
         private void printShortestPathCost(int[][] dist)
         {
-            var flagCell = _game.CurrentState.Board.FlagCell;
+            var flagCell = this.InitialNode.Board.FlagCell;
             Console.WriteLine($"Shortest path cost: {dist[flagCell.X][flagCell.Y]}");
             Console.WriteLine("All distances from player:\n");
 
