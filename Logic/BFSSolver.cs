@@ -28,6 +28,7 @@ namespace ReachTheFlag.Logic
                         Printer.PrintBoard(stateNode.Board);
                         Console.WriteLine("Game done.");
 
+                        // Early exit
                         return;
                     }
 
