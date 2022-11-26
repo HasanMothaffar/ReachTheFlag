@@ -33,8 +33,7 @@ SolverStrategy GetSolveStrategyFromUserInput()
 
 void Main()
 {
-    string mapFilePath = "D:\\my-projects\\VersionTest\\ConsoleApp1\\map.txt";
-    ReachTheFlagGame game = new ReachTheFlagGame(mapFilePath);
+    ReachTheFlagGame game = new ReachTheFlagGame("D:\\my-projects\\VersionTest\\ConsoleApp1\\Maps\\map.txt");
     SolverStrategy strategy = GetSolveStrategyFromUserInput();
 
     game.Solve(strategy);
