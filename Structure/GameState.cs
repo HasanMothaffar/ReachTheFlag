@@ -6,14 +6,13 @@ namespace ReachTheFlag.Structure
 {
     public class GameState: ICloneable<GameState>
     {
-        private BoardCell _playerCell;
-
+        public BoardCell PlayerCell { get; protected set; }
         public readonly GameBoard Board;
-        public readonly PlayerPath PlayerPath;
 
-        public int Weight => _playerCell.Weight;
-        public int X => _playerCell.X;
-        public int Y => _playerCell.Y;
+        public int Weight => PlayerCell.Weight;
+        public bool IsFlag => PlayerCell.IsFlag;
+        public int X => PlayerCell.X;
+        public int Y => PlayerCell.Y;
 
         // dx and dy pairs
         private readonly Dictionary<MoveDirection, (int, int)> _velocityVectors = new()
@@ -34,10 +33,7 @@ namespace ReachTheFlag.Structure
                 throw new Exception("Player cell is missing in board. Please provide a valid board.");
             }
 
-            this._playerCell = playerCell;
-
-            this.PlayerPath = new PlayerPath();
-            PlayerPath.AddCell(playerCell);
+            this.PlayerCell = playerCell;
         }
 
         public bool IsFinal()
@@ -61,8 +57,8 @@ namespace ReachTheFlag.Structure
         {
             (int dx, int dy) = this._velocityVectors[direction];
 
-            int x = dx + _playerCell.X;
-            int y = dy + _playerCell.Y;
+            int x = dx + this.X;
+            int y = dy + this.Y;
 
             /**
 			 * The board's layout is like this:
@@ -87,12 +83,11 @@ namespace ReachTheFlag.Structure
         {
             if (this.canPlayerMoveToDirection(direction))
             {
-                _playerCell.OnPlayerLeave();
+                PlayerCell.OnPlayerLeave();
 
                 BoardCell nextPlayerCell = this.getNextPlayerCell(direction);
-                _playerCell = nextPlayerCell;
+                PlayerCell = nextPlayerCell;
 
-                PlayerPath.AddCell(nextPlayerCell);
                 nextPlayerCell.OnPlayerEnter();
             }
         }
