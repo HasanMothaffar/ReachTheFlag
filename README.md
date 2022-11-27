@@ -24,7 +24,9 @@ A: Move left
 ### Symbols
 
 *: Current player position. This symbol moves as you press movement keys.
+
 o: A one-step cell. Once you step on this cell, you cannot step on it again.
+
 f: Flag cell. This is the cell that you're supposed to be standing at when the game finishes.
 
 ## Purpose

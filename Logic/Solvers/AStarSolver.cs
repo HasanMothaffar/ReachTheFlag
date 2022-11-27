@@ -4,12 +4,12 @@ using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Logic
 {
-    internal class UniformCostSolver : GraphBasedSolver
+    internal class AStarSolver : GraphBasedSolver
     {
         private int[][] _dist;
         private BoardCell[][] _cells;
 
-        public UniformCostSolver(GameState initialNode) : base("Uniform Cost", initialNode) 
+        public AStarSolver(GameState initialNode) : base("A* (star)", initialNode)
         {
             this._cells = initialNode.Board.GetAllCells();
             this._dist = getDistancesArray();

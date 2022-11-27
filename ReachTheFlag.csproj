@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <None Remove="حسن_مظفر_فئة_2_خوارزميات_بحث_ذكية_2022_14_11.rar" />
   </ItemGroup>
 
 </Project>
