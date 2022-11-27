@@ -36,9 +36,6 @@ namespace ReachTheFlag.Game
         public void Solve(SolverStrategy strategy)
         {
             GameSolver solver = SolverFactory.GetSolverForGame(strategy, _currentState);
-            Console.Clear();
-            Console.WriteLine($"Chosen strategy: {solver.Name}");
-
             solver.SolveAndPrintSolutionStatistics();
         }
     }

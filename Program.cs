@@ -1,4 +1,6 @@
-﻿using ReachTheFlag.Game;
+﻿using ReachTheFlag;
+using ReachTheFlag.ExtensionMethods;
+using ReachTheFlag.Game;
 using ReachTheFlag.Logic;
 
 SolverStrategy GetSolveStrategyFromUserInput()
@@ -14,21 +16,20 @@ SolverStrategy GetSolveStrategyFromUserInput()
     char pressedKey = Console.ReadKey(true).KeyChar;
     string type = pressedKey.ToString();
 
-    SolverStrategy solverStrategy;
+    Console.Clear();
 
-    try
+
+    if (Enum.TryParse(type, out SolverStrategy solverStrategy))
     {
-        Enum.TryParse(type, out SolverStrategy solverType);
-        solverStrategy = solverType;
+        Console.WriteLine($"Chosen strategy: {solverStrategy.DisplayName()}");
+        return solverStrategy;
     }
 
-    catch
+    else
     {
         Console.WriteLine("Unknown key was input: Falling back to user input strategy.");
-        solverStrategy = SolverStrategy.UserInput;
+        return SolverStrategy.UserInput;
     }
-
-    return solverStrategy;
 }
 
 void Main()
@@ -58,4 +59,11 @@ void Main()
     }
 }
 
+void test()
+{
+    Test t = new Test();
+    t.RunTestRig(100);
+}
+
 Main();
+//test();
