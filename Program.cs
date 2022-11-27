@@ -34,9 +34,28 @@ SolverStrategy GetSolveStrategyFromUserInput()
 void Main()
 {
     ReachTheFlagGame game = new ReachTheFlagGame("D:\\my-projects\\VersionTest\\ConsoleApp1\\Maps\\map.txt");
-    SolverStrategy strategy = GetSolveStrategyFromUserInput();
 
-    game.Solve(strategy);
+    while (true)
+    {
+        SolverStrategy strategy = GetSolveStrategyFromUserInput();
+        game.Solve(strategy);
+
+        Console.WriteLine("Press r to restart the game, or any other key to quit.");
+
+        char pressedKey = Console.ReadKey(true).KeyChar;
+        string pressedKeyInLowercase = pressedKey.ToString().ToLower();
+
+        if (pressedKeyInLowercase == "r")
+        {
+            Console.Clear();
+            game.Restart();
+        }
+
+        else
+        {
+            break;
+        }
+    }
 }
 
 Main();
