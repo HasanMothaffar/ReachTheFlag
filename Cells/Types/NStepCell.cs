@@ -9,7 +9,7 @@
 
         public NStepCell(int x, int y, int allowedNumberOfSteps = 1, int weight = 1) : base(x, y, weight)
         {
-            this.Symbol = CellPrintSymbols.NStep;
+            this.Symbol = allowedNumberOfSteps.ToString();
             this.allowedNumberOfSteps = allowedNumberOfSteps;
         }
 
@@ -22,8 +22,8 @@
 
         public override void OnPlayerLeave()
         {
-            this.Symbol = CellPrintSymbols.NStep;
             this.allowedNumberOfSteps--;
+            this.Symbol = this.Symbol = allowedNumberOfSteps.ToString();
 
             if (this.allowedNumberOfSteps == 0)
             {
