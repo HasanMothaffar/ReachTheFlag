@@ -33,10 +33,16 @@ namespace ReachTheFlag.Game
             this._currentState = new GameState(this._originalBoard);
         }
 
-        public void Solve(SolverStrategy strategy)
+        public void SolveAndPrintSolutionStatistics(SolverStrategy strategy)
         {
             GameSolver solver = SolverFactory.GetSolverForGame(strategy, _currentState);
             solver.SolveAndPrintSolutionStatistics();
+        }
+
+        public void Solve(SolverStrategy strategy)
+        {
+            GameSolver solver = SolverFactory.GetSolverForGame(strategy, _currentState);
+            solver.Solve();
         }
     }
 }
