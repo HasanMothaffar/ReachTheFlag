@@ -1,36 +1,73 @@
-﻿using ReachTheFlag.Exceptions;
+﻿using ReachTheFlag.Cells;
+using ReachTheFlag.Exceptions;
 using ReachTheFlag.Structure;
+using System.Diagnostics;
 
 namespace ReachTheFlag.Logic
 {
     public abstract class GameSolver
     {
+        private readonly Stopwatch _solutionWatch;
+        protected readonly PlayerPath PlayerPath;
+
         public string Name { get; protected set; }
-        protected GameState InitialNode;
+
+        protected readonly GameState InitialNode;
 
         public GameSolver(string name, GameState node)
         {
             Name = name;
             InitialNode = node;
+            _solutionWatch = Stopwatch.StartNew();
+            PlayerPath = new PlayerPath();
         }
 
         public abstract void Solve();
-        public System.Diagnostics.Stopwatch SolveAndGetElapsedTime()
+        public void SolveAndPrintSolutionStatistics()
         {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
+            _solutionWatch.Start();
 
             try
             {
                 this.Solve();
-                watch.Stop();
+                _solutionWatch.Stop();
+                printStatistics();
             }
 
             catch (GameImpossibleToSolveException e)
             {
                 Console.WriteLine(e.Message);
             }
+        }
 
-            return watch;
+        private void printStatistics()
+        {
+            Console.WriteLine("Elapsed time: {0}s", _solutionWatch.Elapsed.TotalSeconds);
+
+            var visitedCells = PlayerPath.GetCells();
+            if (visitedCells.Count > 0)
+            {
+                Console.WriteLine("Player path: ");
+                visitedCells.ForEach(cell => Console.WriteLine(cell));
+            }
+
+            PrintSpecificStatistics();
+        }
+
+        protected virtual void PrintSpecificStatistics() { }
+
+        protected void PopulatePlayerPath(Dictionary<GameState, GameState?> parents, GameState finalState)
+        {
+            Stack<BoardCell> stack = new();
+            GameState? p = parents[finalState];
+
+            while (p is not null)
+            {
+                stack.Push(p.PlayerCell);
+                p = parents[p];
+            }
+
+            while (stack.Count > 0) this.PlayerPath.AddCell(stack.Pop());
         }
     }
 }

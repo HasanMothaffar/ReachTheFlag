@@ -39,8 +39,7 @@ namespace ReachTheFlag.Game
             Console.Clear();
             Console.WriteLine($"Chosen strategy: {solver.Name}");
 
-            var watch = solver.SolveAndGetElapsedTime();
-            Printer.PrintTimeStatistics(watch);
+            solver.SolveAndPrintSolutionStatistics();
         }
     }
 }

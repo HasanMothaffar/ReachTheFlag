@@ -6,6 +6,8 @@ namespace ReachTheFlag.Logic
 {
 	public class UserInputSolver : GameSolver
 	{
+        private int _numberOfPlayerMoves = 0;
+
         private readonly Dictionary<string, MoveDirection> _moveDirections = new()
 		{
 			{ "a", MoveDirection.Left },
@@ -14,12 +16,14 @@ namespace ReachTheFlag.Logic
 			{ "s", MoveDirection.Down },
 		};
 
-        public UserInputSolver(GameState initialNode) : base("User Input", initialNode) { }
+        public UserInputSolver(GameState initialNode) : base("User Input", initialNode) 
+        {
+            this.PlayerPath.AddCell(InitialNode.PlayerCell);
+        }
 
         public override void Solve()
 		{
             char pressedKey;
-
             Printer.PrintBoard(InitialNode.Board);
 
             while (true)
@@ -43,8 +47,6 @@ namespace ReachTheFlag.Logic
                     break;
                 }
             }
-
-            Printer.PrintPlayerPath(InitialNode.PlayerPath);
 		}
 
 		private void respondToUserInput(char pressedKey)
@@ -55,8 +57,16 @@ namespace ReachTheFlag.Logic
             {
                 MoveDirection direction = this._moveDirections[lowerCaseKey];
                 Console.WriteLine($"Move direction: {direction}");
+
                 this.InitialNode.ShiftPlayerPosition(direction);
+                this.PlayerPath.AddCell(this.InitialNode.PlayerCell);
+                this._numberOfPlayerMoves++;
             }
         }
-	}
+
+        protected override void PrintSpecificStatistics()
+        {
+            Console.WriteLine($"Number of moves: {_numberOfPlayerMoves}");
+        }
+    }
 }
