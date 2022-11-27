@@ -1,6 +1,5 @@
 ﻿using ReachTheFlag.Game;
 using ReachTheFlag.Structure;
-using ReachTheFlag.Utils;
 
 namespace ReachTheFlag.Logic
 {
@@ -11,26 +10,26 @@ namespace ReachTheFlag.Logic
         public override void Solve()
         {
             GameState? finalState = null;
-            GameState initialState = this.InitialNode;
 
             Queue<GameState> stateQueue = new();
-            stateQueue.Enqueue(initialState);
+            stateQueue.Enqueue(this.InitialNode);
 
-            Dictionary<GameState, GameState?> parents = new();
-            parents[initialState] = null;
+            bool shouldQuitLoop = false;
 
             while (stateQueue.Count > 0)
             {
+                if (shouldQuitLoop) break;
                 GameState state = stateQueue.Dequeue();
 
                 foreach (KeyValuePair<MoveDirection, GameState> kvp in state.GetAllNeighboringStates())
                 {
                     GameState stateNode = kvp.Value;
-                    parents[stateNode] = state;
+                    Parents[stateNode] = state;
 
                     if (stateNode.IsFinal())
                     {
                         finalState = stateNode;
+                        shouldQuitLoop = true;
                         break;
                     }
 
@@ -46,18 +45,7 @@ namespace ReachTheFlag.Logic
                 throw new Exception("Game is impossible to solve.");
             }
 
-            Printer.PrintBoard(finalState.Board);
-            Console.WriteLine("Game done.");
-
-            this.CalculateMaxDepth(InitialNode);
-            this.CalculateSolutionDepth(parents, finalState);
-            this.PopulatePlayerPath(parents, finalState);
-        }
-
-        protected override void PrintSpecificStatistics()
-        {
-            Console.WriteLine($"Solution depth: {SolutionDepth}");
-            Console.WriteLine($"Maximum tree depth: {MaximalSolutionTreeDepth}");
+            this.FinalState = finalState;
         }
     }
 }

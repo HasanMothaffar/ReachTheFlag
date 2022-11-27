@@ -36,19 +36,10 @@ namespace ReachTheFlag.Logic
 
         public override void Solve()
         {
-            GameState initialState = this.InitialNode;
             GameState? finalState = null;
 
-            BoardCell[][] cells = initialState.Board.GetAllCells();
-
-            // Dijkstra Data structures
             PriorityQueue<GameState, int> queue = new();
-
-            // For printing the path
-            Dictionary<GameState, GameState?> parents = new();
-            parents[initialState] = null;
-
-            queue.Enqueue(initialState, 0);
+            queue.Enqueue(this.InitialNode, 0);
 
             while (queue.Count > 0)
             {
@@ -65,7 +56,7 @@ namespace ReachTheFlag.Logic
                         queue.Enqueue(neighbor, possibleShortestDistance);
                         _dist[neighbor.X][neighbor.Y] = possibleShortestDistance;
 
-                        parents[neighbor] = currentState;
+                        Parents[neighbor] = currentState;
 
                         if (neighbor.PlayerCell.IsFlag)
                         {
@@ -75,9 +66,7 @@ namespace ReachTheFlag.Logic
                 }
             }
 
-            this.CalculateMaxDepth(this.InitialNode);
-            this.CalculateSolutionDepth(parents, finalState);
-            this.PopulatePlayerPath(parents, finalState);
+            this.FinalState = finalState;
         }
 
         private void printShortestPathCost()

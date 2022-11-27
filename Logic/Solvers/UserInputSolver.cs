@@ -19,6 +19,7 @@ namespace ReachTheFlag.Logic
         public UserInputSolver(GameState initialNode) : base("User Input", initialNode) 
         {
             this.PlayerPath.AddCell(InitialNode.PlayerCell);
+            this.FinalState = InitialNode;
         }
 
         public override void Solve()
@@ -37,12 +38,14 @@ namespace ReachTheFlag.Logic
                 // If the game is final, the player is technically considered stuck.
                 if (InitialNode.IsFinal())
                 {
+                    Console.Clear();
                     Console.WriteLine("You won!");
                     break;
                 }
 
                 if (InitialNode.IsPlayerStuck())
                 {
+                    Console.Clear();
                     Console.WriteLine("Player is stuck.");
                     break;
                 }
