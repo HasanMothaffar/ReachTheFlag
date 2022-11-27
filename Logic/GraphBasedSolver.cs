@@ -5,11 +5,14 @@ namespace ReachTheFlag.Logic
 {
     public abstract class GraphBasedSolver : GameSolver
     {
-        protected int MaximalSolutionTreeDepth = 0;
         protected int SolutionDepth = 0;
+        protected int MaximalSolutionTreeDepth = 0;
 
-        protected GraphBasedSolver(string name, GameState node) : base(name, node)
+        protected Dictionary<GameState, GameState?> Parents = new();
+
+        protected GraphBasedSolver(string name, GameState node) : base(name, node) 
         {
+            Parents[this.InitialNode] = null;
         }
 
         private int getMaxDepth(GameState node)
@@ -28,20 +31,20 @@ namespace ReachTheFlag.Logic
             return maxDepth + 1;
         }
         
-        protected void CalculateMaxDepth(GameState node)
+        private void calculateMaxDepth()
         {
-            this.MaximalSolutionTreeDepth = this.getMaxDepth(node);
+            this.MaximalSolutionTreeDepth = this.getMaxDepth(this.FinalState);
         }
 
-        protected void CalculateSolutionDepth(Dictionary<GameState, GameState?> parents, GameState finalState)
+        private void calculateSolutionDepth()
         {
             int solutionDepth = 0;
-            GameState? p = parents[finalState];
+            GameState? p = Parents[FinalState];
 
             while (p is not null)
             {
                 solutionDepth++;
-                p = parents[p];
+                p = Parents[p];
             }
 
             this.SolutionDepth = solutionDepth;
@@ -49,6 +52,9 @@ namespace ReachTheFlag.Logic
 
         protected override void PrintSpecificStatistics()
         {
+            calculateMaxDepth();
+            calculateSolutionDepth();
+
             Console.WriteLine($"Solution Depth: {SolutionDepth}");
             Console.WriteLine($"Maximum Tree Depth: {MaximalSolutionTreeDepth}");
         }

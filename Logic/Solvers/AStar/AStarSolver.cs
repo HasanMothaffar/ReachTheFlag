@@ -1,18 +1,24 @@
 ﻿using ReachTheFlag.Cells;
 using ReachTheFlag.Game;
+using ReachTheFlag.Logic.Solvers.AStar;
 using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Logic
 {
     internal class AStarSolver : GraphBasedSolver
     {
-        private int[][] _dist;
-        private BoardCell[][] _cells;
+        private readonly int[][] _dist;
+        private readonly double[][] _heuristicValues;
+
+        private readonly BoardCell[][] _cells;
 
         public AStarSolver(GameState initialNode) : base("A* (star)", initialNode)
         {
             this._cells = initialNode.Board.GetAllCells();
             this._dist = getDistancesArray();
+
+            AStarHeuristic heuristic = new AStarManhattanHeuristic();
+            this._heuristicValues = heuristic.GetHeuristicArrayForBoard(initialNode.Board);
         }
 
         private int[][] getDistancesArray()
@@ -33,22 +39,12 @@ namespace ReachTheFlag.Logic
 
             return dist;
         }
-
         public override void Solve()
         {
-            GameState initialState = this.InitialNode;
             GameState? finalState = null;
 
-            BoardCell[][] cells = initialState.Board.GetAllCells();
-
-            // Dijkstra Data structures
-            PriorityQueue<GameState, int> queue = new();
-
-            // For printing the path
-            Dictionary<GameState, GameState?> parents = new();
-            parents[initialState] = null;
-
-            queue.Enqueue(initialState, 0);
+            PriorityQueue<GameState, double> queue = new();
+            queue.Enqueue(this.InitialNode, 0);
 
             while (queue.Count > 0)
             {
@@ -62,10 +58,12 @@ namespace ReachTheFlag.Logic
 
                     if (possibleShortestDistance < _dist[neighbor.X][neighbor.Y])
                     {
-                        queue.Enqueue(neighbor, possibleShortestDistance);
                         _dist[neighbor.X][neighbor.Y] = possibleShortestDistance;
 
-                        parents[neighbor] = currentState;
+                        double priority = possibleShortestDistance + _heuristicValues[neighbor.X][neighbor.Y];
+                        queue.Enqueue(neighbor, priority);
+
+                        Parents[neighbor] = currentState;
 
                         if (neighbor.PlayerCell.IsFlag)
                         {
@@ -75,9 +73,7 @@ namespace ReachTheFlag.Logic
                 }
             }
 
-            this.CalculateMaxDepth(this.InitialNode);
-            this.CalculateSolutionDepth(parents, finalState);
-            this.PopulatePlayerPath(parents, finalState);
+            this.FinalState = finalState;
         }
 
         private void printShortestPathCost()

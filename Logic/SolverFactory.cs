@@ -1,5 +1,4 @@
-﻿using ReachTheFlag.Game;
-using ReachTheFlag.Structure;
+﻿using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Logic
 {
@@ -13,6 +12,7 @@ namespace ReachTheFlag.Logic
                 SolverStrategy.DFS => new DFSSolver(initialNode),
                 SolverStrategy.BFS => new BFSSolver(initialNode),
                 SolverStrategy.UniformCost => new UniformCostSolver(initialNode),
+                SolverStrategy.AStar => new AStarSolver(initialNode),
 
                 _ => new UserInputSolver(initialNode)
             };

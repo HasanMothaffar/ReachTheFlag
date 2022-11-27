@@ -1,6 +1,7 @@
 ﻿using ReachTheFlag.Cells;
 using ReachTheFlag.Exceptions;
 using ReachTheFlag.Structure;
+using ReachTheFlag.Utils;
 using System.Diagnostics;
 
 namespace ReachTheFlag.Logic
@@ -9,6 +10,7 @@ namespace ReachTheFlag.Logic
     {
         private readonly Stopwatch _solutionWatch;
         protected readonly PlayerPath PlayerPath;
+        protected GameState FinalState;
 
         public string Name { get; protected set; }
 
@@ -42,6 +44,7 @@ namespace ReachTheFlag.Logic
 
         private void printStatistics()
         {
+            Printer.PrintBoard(FinalState.Board);
             Console.WriteLine("Elapsed time: {0}s", _solutionWatch.Elapsed.TotalSeconds);
 
             var visitedCells = PlayerPath.GetCells();
