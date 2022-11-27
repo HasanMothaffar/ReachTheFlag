@@ -7,6 +7,8 @@ namespace ReachTheFlag.Cells
         public readonly int X;
         public readonly int Y;
         public readonly int Weight;
+
+        public bool IsFlag { get; protected set; }
         public string Symbol { get; protected set; }
         public ConsoleColor Color { get; protected set; }
 
@@ -21,6 +23,8 @@ namespace ReachTheFlag.Cells
 
             IsPlayerVisiting = false;
             IsVisited = false;
+            IsFlag = false;
+
             Symbol = "default";
             Color = ConsoleColor.White;
         }

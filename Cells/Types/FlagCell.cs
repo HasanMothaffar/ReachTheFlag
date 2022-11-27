@@ -11,6 +11,7 @@ namespace ReachTheFlag.Cells
         {
             this.Symbol = CellPrintSymbols.Flag;
             this.Color = _originalColor;
+            this.IsFlag = true;
         }
 
         public override void OnPlayerLeave()
