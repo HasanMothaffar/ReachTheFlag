@@ -1,10 +1,14 @@
-﻿using ReachTheFlag.Cells;
+﻿using Microsoft.VisualBasic;
+using ReachTheFlag.Cells;
 using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Game
 {
     public class MapParser
     {
+        private static int _flagCellsCount = 0;
+        private static int _playerCellsCount = 0;
+
         private static string[] readBoardMapFile(string filename)
         {
             if (File.Exists(filename))
@@ -13,6 +17,15 @@ namespace ReachTheFlag.Game
             }
 
             throw new FileNotFoundException("File " + filename + " was not found.");
+        }
+
+        private static void validateFlagAndPlayerCellsCount(string cellType)
+        {
+            if (cellType == CellTypes.Player) _playerCellsCount++;
+            else if (cellType == CellTypes.Flag) _flagCellsCount++;
+
+            if (_playerCellsCount > 1) throw new Exception("Please provide only one player cell.");
+            if (_flagCellsCount > 1) throw new Exception("Please provide only one flag cell.");
         }
 
         private static (string cellType, int allowedNumberOfSteps, int weight) getCellInfo(string cellString)
@@ -51,6 +64,8 @@ namespace ReachTheFlag.Game
                 for (var j = 0; j < cellsRow.Length; j++)
                 {
                     (string cellType, int allowedNumberOfSteps, int weight) = getCellInfo(cellsRow[j]);
+                    validateFlagAndPlayerCellsCount(cellType);
+
                     cellsArray[i][j] = CellFactory.GetCell(i, j, cellType, allowedNumberOfSteps, weight);
                 }
             }
