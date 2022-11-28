@@ -17,13 +17,21 @@ namespace ReachTheFlag.Game
 
         private static (string cellType, int allowedNumberOfSteps, int weight) getCellInfo(string cellString)
         {
-            string cellType = cellString[0].ToString();
-            int weight = int.Parse(cellString[2].ToString());
+            int weight = 0;
             int allowedNumberOfSteps = 0;
+            string cellType = cellString[0].ToString();
+
+            if (cellType == CellTypes.Gap) return (cellType, allowedNumberOfSteps, weight);
+            if (cellType == CellTypes.Flag)
+            {
+                weight = int.Parse(cellString[1].ToString());
+                return (cellType, allowedNumberOfSteps, weight);
+            }
 
             try
             {
                 allowedNumberOfSteps = int.Parse(cellString[1].ToString());
+                weight = int.Parse(cellString[2].ToString());
             }
             catch { }
 
