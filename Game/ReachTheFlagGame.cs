@@ -7,15 +7,15 @@ namespace ReachTheFlag.Game
     public class ReachTheFlagGame
     {
         // For restarting the game
-        private readonly GameBoard _originalBoard;
+        private readonly GameState _originalState;
         private GameState _currentState;
 
         public ReachTheFlagGame(string mapFilePath)
         {
             GameBoard parsedBoard = MapParser.ParseBoardMap(mapFilePath);
 
-            this._currentState = new GameState(parsedBoard);
-            this._originalBoard = parsedBoard.Clone();
+            _currentState = new GameState(parsedBoard);
+            _originalState = _currentState.Clone();
 
             Printer.PrintBoard(this._currentState.Board);
         }
@@ -30,7 +30,7 @@ namespace ReachTheFlag.Game
 
         public void Restart()
         {
-            this._currentState = new GameState(this._originalBoard);
+            _currentState = _originalState;
         }
 
         public void SolveAndPrintSolutionStatistics(SolverStrategy strategy)

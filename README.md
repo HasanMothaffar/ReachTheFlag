@@ -99,7 +99,6 @@ Second row: `g,n21,n24`
 | Normal    | 2                       | 1      |
 | Normal    | 2                       | 4      |
 
-
 ### Cell Types
 
 -   `n`: Normal cell.
@@ -114,3 +113,8 @@ Second row: `g,n21,n24`
 -   Provide only one flag cell and one player cell.
 -   Cells in the map file should be separated by commas **WITHOUT SPACES!**
 -   Rows in the map are separated by a newline character.
+
+## TODO
+
+-   Replace Board.GetAllCells() with iterator pattern
+-   Make all map grid n \* m (no jagged arrays) by providing gap cells in the place of empty cells

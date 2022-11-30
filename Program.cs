@@ -39,7 +39,7 @@ void Main()
     while (true)
     {
         SolverStrategy strategy = GetSolveStrategyFromUserInput();
-        game.Solve(strategy);
+        game.SolveAndPrintSolutionStatistics(strategy);
 
         Console.WriteLine("Press r to restart the game, or any other key to quit.");
 
@@ -62,7 +62,9 @@ void Main()
 void test()
 {
     Test t = new Test();
-    t.RunTestRig(100);
+    t.CalculateAndDisplayAverageRuntimes(2);
+    Console.WriteLine();
+    //t.CalculateAndDisplayAverageRuntimes(10);
 }
 
 Main();
