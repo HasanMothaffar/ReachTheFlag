@@ -2,7 +2,7 @@
 
 namespace ReachTheFlag.Cells
 {
-    public abstract class BoardCell : ICloneable<BoardCell>, IEquatable<BoardCell?>
+    public abstract class BoardCell : ICloneable<BoardCell>
     {
         public readonly int X;
         public readonly int Y;
@@ -51,28 +51,6 @@ namespace ReachTheFlag.Cells
         public override string ToString()
         {
             return $"({X}, {Y})";
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return Equals(obj as BoardCell);
-        }
-
-        public bool Equals(BoardCell? other)
-        {
-            return other is not null &&
-                   Symbol == other.Symbol &&
-                   Color == other.Color &&
-                   IsVisited == other.IsVisited &&
-                   IsPlayerVisiting == other.IsPlayerVisiting &&
-                   X == other.X &&
-                   Y == other.Y &&
-                   Weight == other.Weight;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(X, Y, Weight);
         }
     }
 }

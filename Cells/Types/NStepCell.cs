@@ -4,8 +4,8 @@
     {
         private int allowedNumberOfSteps;
 
-        private const ConsoleColor _playerIsVisitingColor = ConsoleColor.Yellow;
-        private const ConsoleColor _noMoreAllowedStepsColor = ConsoleColor.Red;
+        private static ConsoleColor _playerIsVisitingColor = ConsoleColor.Yellow;
+        private static ConsoleColor _noMoreAllowedStepsColor = ConsoleColor.Red;
 
         public NStepCell(int x, int y, int allowedNumberOfSteps = 1, int weight = 1) : base(x, y, weight)
         {
@@ -41,13 +41,6 @@
         public override bool IsValid()
         {
             return !this.CanBeVisited();
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is not NStepCell other) return false;
-
-            return other.allowedNumberOfSteps == this.allowedNumberOfSteps && base.Equals(obj);
         }
     }
 }

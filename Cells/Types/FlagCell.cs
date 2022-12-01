@@ -1,22 +1,20 @@
-﻿using System;
-
-namespace ReachTheFlag.Cells
+﻿namespace ReachTheFlag.Cells
 {
     class FlagCell : BoardCell
     {
-        private const ConsoleColor _onPlayerEnterColor = ConsoleColor.Green;
-        private const ConsoleColor _originalColor = ConsoleColor.Magenta;
+        private static ConsoleColor _onPlayerEnterColor = ConsoleColor.Green;
+        private static ConsoleColor _originalColor = ConsoleColor.Magenta;
 
         public FlagCell(int x, int y, int weight = 1) : base(x, y, weight)
         {
-            this.Symbol = CellPrintSymbols.Flag;
-            this.Color = _originalColor;
-            this.IsFlag = true;
+            Symbol = CellPrintSymbols.Flag;
+            Color = _originalColor;
+            IsFlag = true;
         }
 
         public override void OnPlayerLeave()
         {
-            this.Color = _originalColor;
+            Color = _originalColor;
             base.OnPlayerLeave();
         }
 
@@ -28,12 +26,12 @@ namespace ReachTheFlag.Cells
         public override bool IsValid()
         {
             // Player should be standing on this cell to be considered valid
-            return this.IsPlayerVisiting;
+            return IsPlayerVisiting;
         }
 
         public override void OnPlayerEnter()
         {
-            this.Color = _onPlayerEnterColor;
+            Color = _onPlayerEnterColor;
             base.OnPlayerEnter();
         }
     }
