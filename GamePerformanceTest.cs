@@ -5,10 +5,10 @@ using System.Diagnostics;
 
 namespace ReachTheFlag
 {
-    public class Test
+    public class GamePerformanceTest
     {
         private ReachTheFlagGame _game;
-        public Test()
+        public GamePerformanceTest()
         {
             _game = new ReachTheFlagGame("D:\\my-projects\\VersionTest\\ConsoleApp1\\Maps\\map.txt");
         }

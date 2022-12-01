@@ -59,13 +59,13 @@ void Main()
     }
 }
 
-void test()
+void TestGamePerformance()
 {
-    Test t = new Test();
-    t.CalculateAndDisplayAverageRuntimes(2);
+    GamePerformanceTest testSuite = new GamePerformanceTest();
+    testSuite.CalculateAndDisplayAverageRuntimes(2);
     Console.WriteLine();
     //t.CalculateAndDisplayAverageRuntimes(10);
 }
 
 Main();
-//test();
+//TestAlgorithmRuntimes();
