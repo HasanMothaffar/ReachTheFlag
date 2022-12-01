@@ -9,35 +9,42 @@ namespace ReachTheFlag.Logic
         protected int MaximalSolutionTreeDepth = 0;
 
         protected int NumberOfVisitedNotes = 0;
+
         protected Dictionary<GameState, GameState?> Parents = new();
+
+        private bool _hasReachedMaxDepth = false;
 
         protected GraphBasedSolver(string name, GameState node) : base(name, node) 
         {
             Parents[this.InitialNode] = null;
         }
 
-        private int getMaxDepth(GameState node)
+        private void initializeMaxDepth(GameState node, int maxDepth)
         {
-            int maxDepth = 0;
+            if (_hasReachedMaxDepth) return;
+
+            if (node.IsFinal())
+            {
+                _hasReachedMaxDepth = true;
+                MaximalSolutionTreeDepth = maxDepth;
+                return;
+            }
 
             var neighbors = node.GetAllNeighboringStates();
-            if (neighbors.Count == 0) return 0;
 
             foreach (KeyValuePair<MoveDirection, GameState> kvp in neighbors)
             {
                 GameState stateNode = kvp.Value;
-                maxDepth = Math.Max(maxDepth, getMaxDepth(stateNode));
+                initializeMaxDepth(stateNode, maxDepth + 1);
             }
-
-            return maxDepth + 1;
         }
         
-        private void calculateMaxDepth()
+        protected void CalculateMaxDepth()
         {
-            this.MaximalSolutionTreeDepth = this.getMaxDepth(this.FinalState);
+            initializeMaxDepth(InitialNode, 0);
         }
 
-        private void calculateSolutionDepth()
+        protected void CalculateSolutionDepth()
         {
             int solutionDepth = 0;
             GameState? p = Parents[FinalState];
@@ -48,15 +55,15 @@ namespace ReachTheFlag.Logic
                 p = Parents[p];
             }
 
-            this.SolutionDepth = solutionDepth;
+            SolutionDepth = solutionDepth;
         }
 
         protected override void PrintSpecificStatistics()
         {
-            calculateMaxDepth();
-            calculateSolutionDepth();
-
+            CalculateSolutionDepth();
             Console.WriteLine($"Solution Depth: {SolutionDepth}");
+
+            CalculateMaxDepth();
             Console.WriteLine($"Maximum Tree Depth: {MaximalSolutionTreeDepth}");
             Console.WriteLine($"Number of Visited Nodes: {NumberOfVisitedNotes}");
         }
