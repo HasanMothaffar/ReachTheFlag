@@ -57,7 +57,7 @@ namespace ReachTheFlag.Logic
                         queue.Enqueue(neighbor, possibleShortestDistance);
                         _dist[neighbor.X][neighbor.Y] = possibleShortestDistance;
 
-                        Parents[neighbor] = currentState;
+                        Parents[neighbor.PlayerCell] = currentState.PlayerCell;
 
                         if (neighbor.PlayerCell.IsFlag)
                         {

@@ -1,4 +1,5 @@
-﻿using ReachTheFlag.Exceptions;
+﻿using ReachTheFlag.Cells;
+using ReachTheFlag.Exceptions;
 using ReachTheFlag.Structure;
 using ReachTheFlag.Utils;
 using System.Diagnostics;
@@ -32,6 +33,7 @@ namespace ReachTheFlag.Logic
             {
                 this.Solve();
                 _solutionWatch.Stop();
+                PopulatePlayerPath();
                 printStatistics();
             }
 
@@ -57,5 +59,7 @@ namespace ReachTheFlag.Logic
         }
 
         protected virtual void PrintSpecificStatistics() { }
+
+        protected virtual void PopulatePlayerPath() { }
     }
 }

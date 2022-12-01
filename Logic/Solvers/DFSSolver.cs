@@ -17,6 +17,11 @@ namespace ReachTheFlag.Logic
 
             bool shouldQuitLoop = false;
 
+            HashSet<string> visited = new()
+            {
+                InitialNode.ID
+            };
+
             while (stack.Count > 0)
             {
                 NumberOfVisitedNotes++;
@@ -27,7 +32,13 @@ namespace ReachTheFlag.Logic
                 foreach (KeyValuePair<MoveDirection, GameState> kvp in state.GetAllNeighboringStates())
                 {
                     GameState neighbor = kvp.Value;
-                    Parents[neighbor] = state;
+                    if (visited.Contains(neighbor.ID))
+                    {
+                        continue;
+                    }
+
+                    visited.Add(neighbor.ID);
+                    Parents[neighbor.PlayerCell] = state.PlayerCell;
 
                     if (neighbor.IsFinal())
                     {

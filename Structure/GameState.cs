@@ -6,6 +6,7 @@ namespace ReachTheFlag.Structure
 {
     public class GameState: ICloneable<GameState>
     {
+        public string ID;
         public BoardCell PlayerCell { get; protected set; }
         public readonly GameBoard Board;
 
@@ -34,6 +35,23 @@ namespace ReachTheFlag.Structure
             }
 
             this.PlayerCell = playerCell;
+            generateID();
+        }
+
+        private void generateID()
+        {
+            ID = "";
+            BoardCell[][] cells = Board.GetAllCells();
+            for (var i = 0; i < cells.Length; i++)
+            {
+                for (var j = 0; j < cells[i].Length; j++)
+                {
+                    string isValid = cells[i][j].IsValid() ? "1" : "0";
+                    string isVisited = cells[i][j].IsVisited ? "1" : "0";
+                    string isPlayerVisiting = cells[i][j].IsPlayerVisiting ? "1" : "0";
+                    ID += $"{isValid}{isVisited}{isPlayerVisiting}";
+                }
+            }
         }
 
         public bool IsFinal()
@@ -84,6 +102,8 @@ namespace ReachTheFlag.Structure
                 PlayerCell.OnPlayerLeave();
                 PlayerCell = getNextPlayerCell(direction);
                 PlayerCell.OnPlayerEnter();
+
+                generateID();
             }
         }
 

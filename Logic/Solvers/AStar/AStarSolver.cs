@@ -64,7 +64,7 @@ namespace ReachTheFlag.Logic
                         double priority = possibleShortestDistance + _heuristicValues[neighbor.X][neighbor.Y];
                         queue.Enqueue(neighbor, priority);
 
-                        Parents[neighbor] = currentState;
+                        Parents[neighbor.PlayerCell] = currentState.PlayerCell;
 
                         if (neighbor.PlayerCell.IsFlag)
                         {

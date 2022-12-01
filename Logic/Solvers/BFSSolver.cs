@@ -15,6 +15,11 @@ namespace ReachTheFlag.Logic
             Queue<GameState> queue = new();
             queue.Enqueue(InitialNode);
 
+            HashSet<string> visited = new()
+            {
+                InitialNode.ID
+            };
+
             bool shouldQuitLoop = false;
 
             while (queue.Count > 0)
@@ -26,7 +31,14 @@ namespace ReachTheFlag.Logic
                 foreach (KeyValuePair<MoveDirection, GameState> kvp in state.GetAllNeighboringStates())
                 {
                     GameState neighbor = kvp.Value;
-                    Parents[neighbor] = state;
+
+                    if (visited.Contains(neighbor.ID))
+                    {
+                        continue;
+                    }
+
+                    visited.Add(neighbor.ID);
+                    Parents[neighbor.PlayerCell] = state.PlayerCell;
 
                     if (neighbor.IsFinal())
                     {

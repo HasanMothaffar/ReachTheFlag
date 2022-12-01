@@ -1,4 +1,5 @@
-﻿using ReachTheFlag.Game;
+﻿using ReachTheFlag.Cells;
+using ReachTheFlag.Game;
 using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Logic
@@ -10,13 +11,13 @@ namespace ReachTheFlag.Logic
 
         protected int NumberOfVisitedNotes = 0;
 
-        protected Dictionary<GameState, GameState?> Parents = new();
+        protected Dictionary<BoardCell, BoardCell?> Parents = new();
 
         private bool _hasReachedMaxDepth = false;
 
         protected GraphBasedSolver(string name, GameState node) : base(name, node) 
         {
-            Parents[this.InitialNode] = null;
+            Parents[this.InitialNode.PlayerCell] = null;
         }
 
         private void initializeMaxDepth(GameState node, int maxDepth)
@@ -47,12 +48,12 @@ namespace ReachTheFlag.Logic
         protected void CalculateSolutionDepth()
         {
             int solutionDepth = 0;
-            GameState? p = Parents[FinalState];
+            BoardCell? c = Parents[FinalState.PlayerCell];
 
-            while (p is not null)
+            while (c is not null)
             {
                 solutionDepth++;
-                p = Parents[p];
+                c = Parents[c];
             }
 
             SolutionDepth = solutionDepth;
@@ -66,6 +67,23 @@ namespace ReachTheFlag.Logic
             CalculateMaxDepth();
             Console.WriteLine($"Maximum Tree Depth: {MaximalSolutionTreeDepth}");
             Console.WriteLine($"Number of Visited Nodes: {NumberOfVisitedNotes}");
+        }
+
+        protected override void PopulatePlayerPath()
+        {
+            Stack<BoardCell> stack = new();
+            BoardCell? c = Parents[FinalState.PlayerCell];
+
+            while (c is not null)
+            {
+                stack.Push(c);
+                c = Parents[c];
+            }
+
+            while (stack.Count > 0)
+            {
+                this.PlayerPath.AddCell(stack.Pop());
+            }
         }
     }
 }

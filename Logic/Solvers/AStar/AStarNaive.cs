@@ -45,6 +45,11 @@ namespace ReachTheFlag.Logic.Solvers.AStar
             PriorityQueue<GameState, double> queue = new();
             queue.Enqueue(InitialNode, 0);
 
+            HashSet<string> visited = new()
+            {
+                InitialNode.ID
+            };
+
             bool shouldBreakLoop = false;
 
             while (queue.Count > 0)
@@ -56,10 +61,12 @@ namespace ReachTheFlag.Logic.Solvers.AStar
                 foreach (KeyValuePair<MoveDirection, GameState> kvp in currentState.GetAllNeighboringStates())
                 {
                     GameState neighbor = kvp.Value;
+                    if (visited.Contains(neighbor.ID)) continue;
+                    visited.Add(neighbor.ID);
 
                     int possibleShortestDistance = _dist[currentState.X][currentState.Y] + neighbor.Weight;
                     double priority = neighbor.Weight + _heuristicValues[neighbor.X][neighbor.Y];
-                    Parents[neighbor] = currentState;
+                    Parents[neighbor.PlayerCell] = currentState.PlayerCell;
 
                     if (possibleShortestDistance < _dist[neighbor.X][neighbor.Y])
                     {

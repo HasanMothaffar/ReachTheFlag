@@ -15,6 +15,7 @@ namespace ReachTheFlag.Logic
                 SolverStrategy.UniformCost => new UniformCostSolver(initialNode),
                 SolverStrategy.AStar => new AStarSolver(initialNode),
                 SolverStrategy.AStarNaive => new AStarNaiveSolver(initialNode),
+                SolverStrategy.UniformCostNaive => new UniformCostNaiveSolver(initialNode),
 
                 _ => new UserInputSolver(initialNode)
             };
