@@ -1,5 +1,4 @@
-﻿using ReachTheFlag.Cells;
-using ReachTheFlag.Exceptions;
+﻿using ReachTheFlag.Exceptions;
 using ReachTheFlag.Structure;
 using ReachTheFlag.Utils;
 using System.Diagnostics;
@@ -58,19 +57,5 @@ namespace ReachTheFlag.Logic
         }
 
         protected virtual void PrintSpecificStatistics() { }
-
-        protected void PopulatePlayerPath(Dictionary<GameState, GameState?> parents, GameState finalState)
-        {
-            Stack<BoardCell> stack = new();
-            GameState? p = parents[finalState];
-
-            while (p is not null)
-            {
-                stack.Push(p.PlayerCell);
-                p = parents[p];
-            }
-
-            while (stack.Count > 0) this.PlayerPath.AddCell(stack.Pop());
-        }
     }
 }

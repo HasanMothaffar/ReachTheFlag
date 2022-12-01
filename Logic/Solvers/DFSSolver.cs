@@ -1,4 +1,5 @@
-﻿using ReachTheFlag.Game;
+﻿using ReachTheFlag.Exceptions;
+using ReachTheFlag.Game;
 using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Logic
@@ -11,42 +12,44 @@ namespace ReachTheFlag.Logic
         {
             GameState? finalState = null;
 
-            Stack<GameState> stateQueue = new();
-            stateQueue.Push(this.InitialNode);
+            Stack<GameState> stack = new();
+            stack.Push(this.InitialNode);
 
             bool shouldQuitLoop = false;
 
-            while (stateQueue.Count > 0)
+            while (stack.Count > 0)
             {
+                NumberOfVisitedNotes++;
                 if (shouldQuitLoop) break;
 
-                GameState state = stateQueue.Pop();
+                GameState state = stack.Pop();
 
                 foreach (KeyValuePair<MoveDirection, GameState> kvp in state.GetAllNeighboringStates())
                 {
-                    GameState stateNode = kvp.Value;
-                    Parents[stateNode] = state;
+                    GameState neighbor = kvp.Value;
+                    Parents[neighbor] = state;
 
-                    if (stateNode.IsFinal())
+                    if (neighbor.IsFinal())
                     {
-                        finalState = stateNode;
+                        finalState = neighbor;
                         shouldQuitLoop = true;
                         break;
                     }
 
                     else
                     {
-                        stateQueue.Push(stateNode);
+                        stack.Push(neighbor);
                     }
                 }
             }
 
             if (finalState is null)
             {
-                throw new Exception("Game is impossible to solve.");
+                throw new GameImpossibleToSolveException("Game is impossible to solve.");
             }
 
             this.FinalState = finalState;
         }
+
     }
 }

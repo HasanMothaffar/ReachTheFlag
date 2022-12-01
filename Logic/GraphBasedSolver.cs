@@ -8,6 +8,7 @@ namespace ReachTheFlag.Logic
         protected int SolutionDepth = 0;
         protected int MaximalSolutionTreeDepth = 0;
 
+        protected int NumberOfVisitedNotes = 0;
         protected Dictionary<GameState, GameState?> Parents = new();
 
         protected GraphBasedSolver(string name, GameState node) : base(name, node) 
@@ -57,6 +58,7 @@ namespace ReachTheFlag.Logic
 
             Console.WriteLine($"Solution Depth: {SolutionDepth}");
             Console.WriteLine($"Maximum Tree Depth: {MaximalSolutionTreeDepth}");
+            Console.WriteLine($"Number of Visited Nodes: {NumberOfVisitedNotes}");
         }
     }
 }

@@ -43,6 +43,7 @@ namespace ReachTheFlag.Logic
 
             while (queue.Count > 0)
             {
+                NumberOfVisitedNotes++;
                 GameState currentState = queue.Dequeue();
 
                 foreach (KeyValuePair<MoveDirection, GameState> kvp in currentState.GetAllNeighboringStates())

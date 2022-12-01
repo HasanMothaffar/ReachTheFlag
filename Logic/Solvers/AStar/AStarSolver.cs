@@ -5,7 +5,7 @@ using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Logic
 {
-    internal class AStarSolver : GraphBasedSolver
+    public class AStarSolver : GraphBasedSolver
     {
         private readonly int[][] _dist;
         private readonly double[][] _heuristicValues;
@@ -48,6 +48,7 @@ namespace ReachTheFlag.Logic
 
             while (queue.Count > 0)
             {
+                NumberOfVisitedNotes++;
                 GameState currentState = queue.Dequeue();
 
                 foreach (KeyValuePair<MoveDirection, GameState> kvp in currentState.GetAllNeighboringStates())
