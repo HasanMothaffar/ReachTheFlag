@@ -6,14 +6,11 @@ namespace ReachTheFlag.Structure
 	public class GameBoard : ICloneable<GameBoard>
 	{
 		private BoardCell[][] _cells;
-
-		public readonly int RowsCount;
 		public readonly BoardCell FlagCell;
 
 		public GameBoard(BoardCell[][] cells)
 		{
 			_cells = cells;
-			RowsCount = cells.Count();
 			FlagCell = getFlagCell();
 		}
 
@@ -35,7 +32,7 @@ namespace ReachTheFlag.Structure
 
         public bool IsCellWithinBoundaries(int x, int y)
 		{
-			return (x >= 0 && y >= 0 && x < RowsCount && y < _cells[x].Length);
+			return (x >= 0 && y >= 0 && x < _cells.Length && y < _cells[x].Length);
 		}
 
 		public bool AreAllCellsValid()
@@ -74,26 +71,25 @@ namespace ReachTheFlag.Structure
 
 		public BoardCell[][] GetAllCells()
 		{
-			BoardCell[][] allCells = new BoardCell[RowsCount][];
-
-			for (var i = 0; i < RowsCount; i++)
-			{
-				int columnsCountForRow = _cells[i].Length;
-				allCells[i] = new BoardCell[columnsCountForRow];
-
-				for (var j = 0; j < columnsCountForRow; j++)
-				{
-					allCells[i][j] = _cells[i][j].Clone();
-				}
-			}
-
-			return allCells;
+			return _cells;
 		}
 
 		public GameBoard Clone()
 		{
-			BoardCell[][] cellClones = GetAllCells();
-			return new GameBoard(cellClones);
+            BoardCell[][] cellClones = new BoardCell[_cells.Length][];
+
+            for (var i = 0; i < _cells.Length; i++)
+            {
+                int columnsCountForRow = _cells[i].Length;
+                cellClones[i] = new BoardCell[columnsCountForRow];
+
+                for (var j = 0; j < columnsCountForRow; j++)
+                {
+                    cellClones[i][j] = _cells[i][j].Clone();
+                }
+            }
+
+            return new GameBoard(cellClones);
 		}
 	}
 }

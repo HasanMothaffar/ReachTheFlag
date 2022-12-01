@@ -61,7 +61,7 @@ namespace ReachTheFlag.Logic
                 MoveDirection direction = this._moveDirections[lowerCaseKey];
                 Console.WriteLine($"Move direction: {direction}");
 
-                this.InitialNode.ShiftPlayerPosition(direction);
+                this.InitialNode.MovePlayerToDirection(direction);
                 this.PlayerPath.AddCell(this.InitialNode.PlayerCell);
                 this._numberOfPlayerMoves++;
             }

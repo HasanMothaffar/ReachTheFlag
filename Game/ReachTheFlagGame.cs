@@ -30,7 +30,7 @@ namespace ReachTheFlag.Game
 
         public void Restart()
         {
-            _currentState = _originalState;
+            _currentState = _originalState.Clone();
         }
 
         public void SolveAndPrintSolutionStatistics(SolverStrategy strategy)

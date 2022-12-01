@@ -8,9 +8,8 @@ namespace ReachTheFlag.Utils
     {
         public static void PrintBoard(GameBoard board)
         {
-            int rowsCount = board.RowsCount;
-
             BoardCell[][] cells = board.GetAllCells();
+            int rowsCount = cells.Length;
 
             ConsoleColor originalConsoleForgroundColor = Console.ForegroundColor;
 

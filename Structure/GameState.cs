@@ -15,7 +15,7 @@ namespace ReachTheFlag.Structure
         public int Y => PlayerCell.Y;
 
         // dx and dy pairs
-        private readonly Dictionary<MoveDirection, (int, int)> _velocityVectors = new()
+        private static Dictionary<MoveDirection, (int, int)> _velocityVectors = new()
         {
             { MoveDirection.Left, (0, -1) },
             { MoveDirection.Right, (0, 1) },
@@ -25,8 +25,8 @@ namespace ReachTheFlag.Structure
 
         public GameState(GameBoard board)
         {
-            this.Board = board;
-            BoardCell playerCell = this.Board.GetPlayerCell();
+            Board = board;
+            BoardCell playerCell = Board.GetPlayerCell();
 
             if (playerCell is null)
             {
@@ -55,7 +55,7 @@ namespace ReachTheFlag.Structure
 
         private BoardCell getNextPlayerCell(MoveDirection direction)
         {
-            (int dx, int dy) = this._velocityVectors[direction];
+            (int dx, int dy) = _velocityVectors[direction];
 
             int x = dx + this.X;
             int y = dy + this.Y;
@@ -74,37 +74,29 @@ namespace ReachTheFlag.Structure
         private bool canPlayerMoveToDirection(MoveDirection direction)
         {
             BoardCell? cell = this.getNextPlayerCell(direction);
-
-            if (cell is null) return false;
-            return cell.CanBeVisited();
+            return (cell is not null && cell.CanBeVisited());
         }
 
-        public void ShiftPlayerPosition(MoveDirection direction)
+        public void MovePlayerToDirection(MoveDirection direction)
         {
             if (this.canPlayerMoveToDirection(direction))
             {
                 PlayerCell.OnPlayerLeave();
-
-                BoardCell nextPlayerCell = this.getNextPlayerCell(direction);
-                PlayerCell = nextPlayerCell;
-
-                nextPlayerCell.OnPlayerEnter();
+                PlayerCell = getNextPlayerCell(direction);
+                PlayerCell.OnPlayerEnter();
             }
         }
 
         public Dictionary<MoveDirection, GameState> GetAllNeighboringStates()
         {
-            Dictionary<MoveDirection, GameState> neighbors = new Dictionary<MoveDirection, GameState>();
+            Dictionary<MoveDirection, GameState> neighbors = new ();
 
             foreach (MoveDirection direction in Enum.GetValues(typeof(MoveDirection)))
             {
-                if (this.canPlayerMoveToDirection(direction))
+                if (canPlayerMoveToDirection(direction))
                 {
-                    GameBoard boardClone = this.Board.Clone();
-                    GameState possibleState = new GameState(boardClone);
-
-                    possibleState.ShiftPlayerPosition(direction);
-
+                    GameState possibleState = Clone();
+                    possibleState.MovePlayerToDirection(direction);
                     neighbors.Add(direction, possibleState);
                 }
             }
@@ -114,7 +106,7 @@ namespace ReachTheFlag.Structure
 
         public GameState Clone()
         {
-            return new GameState(this.Board.Clone());
+            return new GameState(Board.Clone());
         }
     }
 }
