@@ -17,6 +17,9 @@ namespace ReachTheFlag.Logic
         UniformCost = 4,
 
         [Description("A* (A Star)")]
-        AStar = 5
+        AStar = 5,
+
+        [Description("A* (A Star naive)")]
+        AStarNaive = 6
     }
 }
