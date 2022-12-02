@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ReachTheFlag.Cells;
+using ReachTheFlag.Exceptions;
 using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Game
@@ -27,8 +28,8 @@ namespace ReachTheFlag.Game
             if (cellType == CellTypes.Player) _playerCellsCount++;
             else if (cellType == CellTypes.Flag) _flagCellsCount++;
 
-            if (_playerCellsCount > 1) throw new Exception("Please provide only one player cell.");
-            if (_flagCellsCount > 1) throw new Exception("Please provide only one flag cell.");
+            if (_playerCellsCount > 1) throw new InvalidBoardException("Please provide only one player cell.");
+            if (_flagCellsCount > 1) throw new InvalidBoardException("Please provide only one flag cell.");
         }
 
         private static void resetFlagAndPlayerCellsCount()
