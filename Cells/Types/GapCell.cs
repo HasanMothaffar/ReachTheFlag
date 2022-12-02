@@ -43,5 +43,15 @@ namespace ReachTheFlag.Cells
         {
             throw new CellImpossibleToReachException();
         }
+
+        public override BoardCell Clone()
+        {
+            if (_instance is null)
+            {
+                _instance = new GapCell();
+            }
+
+            return _instance;
+        }
     }
 }

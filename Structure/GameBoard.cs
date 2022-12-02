@@ -5,8 +5,11 @@ namespace ReachTheFlag.Structure
 {
 	public class GameBoard : ICloneable<GameBoard>
 	{
-		private BoardCell[][] _cells;
+		private readonly BoardCell[][] _cells;
 		public readonly BoardCell FlagCell;
+
+		public int RowsCount => _cells.Length;
+		public int ColumnsCount => _cells[0].Length;
 
 		public GameBoard(BoardCell[][] cells)
 		{
@@ -20,7 +23,7 @@ namespace ReachTheFlag.Structure
             {
                 foreach (var cell in row)
                 {
-                    if (cell.Symbol == CellPrintSymbols.Flag)
+                    if (cell.IsFlag)
                     {
                         return cell;
                     }
@@ -76,14 +79,12 @@ namespace ReachTheFlag.Structure
 
 		public GameBoard Clone()
 		{
-            BoardCell[][] cellClones = new BoardCell[_cells.Length][];
+            BoardCell[][] cellClones = new BoardCell[RowsCount][];
 
-            for (var i = 0; i < _cells.Length; i++)
+            for (var i = 0; i < RowsCount; i++)
             {
-                int columnsCountForRow = _cells[i].Length;
-                cellClones[i] = new BoardCell[columnsCountForRow];
-
-                for (var j = 0; j < columnsCountForRow; j++)
+                cellClones[i] = new BoardCell[ColumnsCount];
+                for (var j = 0; j < ColumnsCount; j++)
                 {
                     cellClones[i][j] = _cells[i][j].Clone();
                 }

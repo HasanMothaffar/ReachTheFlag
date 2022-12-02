@@ -43,7 +43,7 @@ namespace ReachTheFlag.Cells
         public abstract bool CanBeVisited();
         public abstract bool IsValid();
 
-        public BoardCell Clone()
+        public virtual BoardCell Clone()
         {
             return (BoardCell)this.MemberwiseClone();
         }

@@ -23,19 +23,22 @@ namespace ReachTheFlag.Game
             throw new FileNotFoundException("File " + filename + " was not found.");
         }
 
-        private static void validateFlagAndPlayerCellsCount(string cellType)
+        private static void validateFlagAndPlayerCellsCount()
+        {
+            if (_playerCellsCount > 1) throw new InvalidBoardException("Please provide only one player cell.");
+            if (_flagCellsCount > 1) throw new InvalidBoardException("Please provide only one flag cell.");
+
+            if (_playerCellsCount == 0) throw new InvalidBoardException("Please provide a player cell.");
+            if (_flagCellsCount == 0) throw new InvalidBoardException("Please provide a flag cell.");
+
+            _flagCellsCount = 0;
+            _playerCellsCount = 0;
+        }
+
+        private static void incrementCellsCount(string cellType)
         {
             if (cellType == CellTypes.Player) _playerCellsCount++;
             else if (cellType == CellTypes.Flag) _flagCellsCount++;
-
-            if (_playerCellsCount > 1) throw new InvalidBoardException("Please provide only one player cell.");
-            if (_flagCellsCount > 1) throw new InvalidBoardException("Please provide only one flag cell.");
-        }
-
-        private static void resetFlagAndPlayerCellsCount()
-        {
-            _flagCellsCount = 0;
-            _playerCellsCount = 0;
         }
 
         private static (string cellType, int allowedNumberOfSteps, int weight) getCellInfo(string cellString)
@@ -75,13 +78,13 @@ namespace ReachTheFlag.Game
                 for (var j = 0; j < board[i].Length; j++)
                 {
                     (string cellType, int allowedNumberOfSteps, int weight) = getCellInfo(board[i][j]);
-                    validateFlagAndPlayerCellsCount(cellType);
+                    incrementCellsCount(cellType);
 
                     cellsArray[i][j] = CellFactory.GetCell(i, j, cellType, allowedNumberOfSteps, weight);
                 }
             }
 
-            resetFlagAndPlayerCellsCount();
+            validateFlagAndPlayerCellsCount();
             return new GameBoard(cellsArray);
         }
     }

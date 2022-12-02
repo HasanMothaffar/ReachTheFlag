@@ -28,16 +28,11 @@ namespace ReachTheFlag.Structure
 
         public GameState(GameBoard board)
         {
-            _id = new StringBuilder();
             Board = board;
-            BoardCell playerCell = Board.GetPlayerCell();
+            PlayerCell = Board.GetPlayerCell();
 
-            if (playerCell is null)
-            {
-                throw new Exception("Player cell is missing in board. Please provide a valid board.");
-            }
-
-            this.PlayerCell = playerCell;
+            // Don't generate ID before initializing Board
+            _id = new StringBuilder();
             generateID();
         }
 
@@ -52,9 +47,13 @@ namespace ReachTheFlag.Structure
                     char isValid = cells[i][j].IsValid() ? '1' : '0';
                     char isVisited = cells[i][j].IsVisited ? '1' : '0';
                     char isPlayerVisiting = cells[i][j].IsPlayerVisiting ? '1' : '0';
-                    _id.Append($"{isValid}{isVisited}{isPlayerVisiting}");
+                    _id.Append($"{isValid}{isVisited}{isPlayerVisiting}, ");
                 }
+                _id.Append('\n');
+
             }
+            _id.Append('\n');
+
         }
 
         public bool IsFinal()
@@ -102,12 +101,18 @@ namespace ReachTheFlag.Structure
         {
             if (this.canPlayerMoveToDirection(direction))
             {
-                PlayerCell.OnPlayerLeave();
-                PlayerCell = getNextPlayerCell(direction);
-                PlayerCell.OnPlayerEnter();
-
-                generateID();
+                __unsafeMovePlayerToDirection(direction);
             }
+        }
+
+        // Don't check if player can move to given direction first. Why? Faster
+        private void __unsafeMovePlayerToDirection(MoveDirection direction)
+        {
+            PlayerCell.OnPlayerLeave();
+            PlayerCell = getNextPlayerCell(direction);
+            PlayerCell.OnPlayerEnter();
+
+            generateID();
         }
 
         public Dictionary<MoveDirection, GameState> GetAllNeighboringStates()
@@ -119,7 +124,7 @@ namespace ReachTheFlag.Structure
                 if (canPlayerMoveToDirection(direction))
                 {
                     GameState possibleState = Clone();
-                    possibleState.MovePlayerToDirection(direction);
+                    possibleState.__unsafeMovePlayerToDirection(direction);
                     neighbors.Add(direction, possibleState);
                 }
             }
