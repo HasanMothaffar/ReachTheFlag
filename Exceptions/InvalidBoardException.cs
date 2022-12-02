@@ -11,7 +11,7 @@
         {
         }
 
-        public InvalidBoardException(string message = "Please provide a valid format for the game board.", Exception inner)
+        public InvalidBoardException(string message, Exception inner)
             : base(message, inner)
         {
         }

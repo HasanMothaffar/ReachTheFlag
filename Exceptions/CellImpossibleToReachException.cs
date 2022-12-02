@@ -11,7 +11,7 @@
         {
         }
 
-        public CellImpossibleToReachException(string message = "Cell is impossible to reach. Player cannot step on it.", Exception inner)
+        public CellImpossibleToReachException(string message, Exception inner)
             : base(message, inner)
         {
         }
