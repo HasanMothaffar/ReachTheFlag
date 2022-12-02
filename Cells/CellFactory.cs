@@ -9,7 +9,7 @@
                 case CellTypes.Flag:
                     return new FlagCell(x, y, weight);
                 case CellTypes.Gap:
-                    return new GapCell(x, y);
+                    return GapCell.GetInstance();
 
                 case CellTypes.Player:
                     {
