@@ -1,12 +1,14 @@
 ﻿using ReachTheFlag.Cells;
 using ReachTheFlag.Game;
 using ReachTheFlag.Utils;
+using System.Text;
 
 namespace ReachTheFlag.Structure
 {
     public class GameState: ICloneable<GameState>
     {
-        public string ID;
+        private readonly StringBuilder _id;
+        public string ID => _id.ToString();
         public BoardCell PlayerCell { get; protected set; }
         public readonly GameBoard Board;
 
@@ -26,6 +28,7 @@ namespace ReachTheFlag.Structure
 
         public GameState(GameBoard board)
         {
+            _id = new StringBuilder();
             Board = board;
             BoardCell playerCell = Board.GetPlayerCell();
 
@@ -40,16 +43,16 @@ namespace ReachTheFlag.Structure
 
         private void generateID()
         {
-            ID = "";
+            _id.Clear();
             BoardCell[][] cells = Board.GetAllCells();
             for (var i = 0; i < cells.Length; i++)
             {
                 for (var j = 0; j < cells[i].Length; j++)
                 {
-                    string isValid = cells[i][j].IsValid() ? "1" : "0";
-                    string isVisited = cells[i][j].IsVisited ? "1" : "0";
-                    string isPlayerVisiting = cells[i][j].IsPlayerVisiting ? "1" : "0";
-                    ID += $"{isValid}{isVisited}{isPlayerVisiting}";
+                    char isValid = cells[i][j].IsValid() ? '1' : '0';
+                    char isVisited = cells[i][j].IsVisited ? '1' : '0';
+                    char isPlayerVisiting = cells[i][j].IsPlayerVisiting ? '1' : '0';
+                    _id.Append($"{isValid}{isVisited}{isPlayerVisiting}");
                 }
             }
         }
