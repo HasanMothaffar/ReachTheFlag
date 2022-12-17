@@ -14,10 +14,8 @@ namespace ReachTheFlag.Game
         {
             if (File.Exists(filename))
             {
-                using (StreamReader r = new StreamReader(filename))
-                {
-                    return r.ReadToEnd();
-                }
+                using StreamReader r = new StreamReader(filename);
+                return r.ReadToEnd();
             }
 
             throw new FileNotFoundException("File " + filename + " was not found.");
@@ -35,7 +33,7 @@ namespace ReachTheFlag.Game
             _playerCellsCount = 0;
         }
 
-        private static void incrementCellsCount(string cellType)
+        private static void incrementCellsCountByType(string cellType)
         {
             if (cellType == CellTypes.Player) _playerCellsCount++;
             else if (cellType == CellTypes.Flag) _flagCellsCount++;
@@ -45,7 +43,9 @@ namespace ReachTheFlag.Game
         {
             int weight = 0;
             int allowedNumberOfSteps = 0;
+
             string cellType = cellString[0].ToString();
+            incrementCellsCountByType(cellType);
 
             if (cellType == CellTypes.Gap) return (cellType, allowedNumberOfSteps, weight);
             if (cellType == CellTypes.Flag)
@@ -78,8 +78,6 @@ namespace ReachTheFlag.Game
                 for (var j = 0; j < board[i].Length; j++)
                 {
                     (string cellType, int allowedNumberOfSteps, int weight) = getCellInfo(board[i][j]);
-                    incrementCellsCount(cellType);
-
                     cellsArray[i][j] = CellFactory.GetCell(i, j, cellType, allowedNumberOfSteps, weight);
                 }
             }
