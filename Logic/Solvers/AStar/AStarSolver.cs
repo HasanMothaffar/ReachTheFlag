@@ -77,27 +77,11 @@ namespace ReachTheFlag.Logic
             this.FinalState = finalState;
         }
 
-        private void printShortestPathCost()
+        protected override void FillStatisticsData()
         {
             var flagCell = this.InitialNode.Board.FlagCell;
-            Console.WriteLine($"Shortest path cost: {_dist[flagCell.X][flagCell.Y]}");
-            Console.WriteLine("All distances from player:\n");
-
-            foreach (var row in _dist)
-            {
-                foreach (var entry in row)
-                {
-                    Console.Write($"{entry} ");
-                }
-
-                Console.WriteLine();
-            }
-        }
-
-        protected override void PrintSpecificStatistics()
-        {
-            base.PrintSpecificStatistics();
-            printShortestPathCost();
+            this.Statistics.ShortestPathCost = _dist[flagCell.X][flagCell.Y];
+            this.Statistics.ShortestPathsArray = _dist;
         }
     }
 }
