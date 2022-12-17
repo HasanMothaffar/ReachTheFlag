@@ -1,4 +1,6 @@
-﻿namespace ReachTheFlag.Cells
+﻿using ReachTheFlag.Game;
+
+namespace ReachTheFlag.Cells
 {
     class FlagCell : BoardCell
     {
@@ -12,10 +14,10 @@
             IsFlag = true;
         }
 
-        public override void OnPlayerLeave()
+        public override void OnPlayerLeave(MoveDirection direction)
         {
             Color = _originalColor;
-            base.OnPlayerLeave();
+            base.OnPlayerLeave(direction);
         }
 
         public override bool CanBeVisited() => true;

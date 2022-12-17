@@ -1,4 +1,5 @@
 ﻿using ReachTheFlag.Exceptions;
+using ReachTheFlag.Game;
 
 namespace ReachTheFlag.Cells
 {
@@ -24,7 +25,7 @@ namespace ReachTheFlag.Cells
             return _instance;
         }
 
-        public override void OnPlayerLeave()
+        public override void OnPlayerLeave(MoveDirection direction)
         {
             throw new CellImpossibleToReachException();
         }

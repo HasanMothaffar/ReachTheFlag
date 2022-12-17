@@ -1,4 +1,6 @@
-﻿namespace ReachTheFlag.Cells
+﻿using ReachTheFlag.Game;
+
+namespace ReachTheFlag.Cells
 {
     class NStepCell : BoardCell
     {
@@ -20,7 +22,7 @@
             base.OnPlayerEnter();
         }
 
-        public override void OnPlayerLeave()
+        public override void OnPlayerLeave(MoveDirection direction)
         {
             allowedNumberOfSteps--;
             Symbol = allowedNumberOfSteps.ToString();
@@ -30,7 +32,7 @@
                 this.Color = _noMoreAllowedStepsColor;
             }
 
-            base.OnPlayerLeave();
+            base.OnPlayerLeave(direction);
         }
 
         public override bool CanBeVisited() => allowedNumberOfSteps > 0;

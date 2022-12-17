@@ -47,13 +47,9 @@ namespace ReachTheFlag.Structure
                     char isValid = cells[i][j].IsValid() ? '1' : '0';
                     char isVisited = cells[i][j].IsVisited ? '1' : '0';
                     char isPlayerVisiting = cells[i][j].IsPlayerVisiting ? '1' : '0';
-                    _id.Append($"{isValid}{isVisited}{isPlayerVisiting}, ");
+                    _id.Append($"{isValid} {isVisited}{isPlayerVisiting}, ");
                 }
-                _id.Append('\n');
-
             }
-            _id.Append('\n');
-
         }
 
         public bool IsFinal()
@@ -108,7 +104,7 @@ namespace ReachTheFlag.Structure
         // Don't check if player can move to given direction first. Why? Faster
         private void __unsafeMovePlayerToDirection(MoveDirection direction)
         {
-            PlayerCell.OnPlayerLeave();
+            PlayerCell.OnPlayerLeave(direction);
             PlayerCell = getNextPlayerCell(direction);
             PlayerCell.OnPlayerEnter();
 
@@ -131,7 +127,6 @@ namespace ReachTheFlag.Structure
 
             return neighbors;
         }
-
         public GameState Clone()
         {
             return new GameState(Board.Clone());
