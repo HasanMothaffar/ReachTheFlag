@@ -34,7 +34,8 @@ SolverStrategy GetSolveStrategyFromUserInput()
 
 void Main()
 {
-    ReachTheFlagGame game = new ReachTheFlagGame("D:\\my-projects\\VersionTest\\ConsoleApp1\\Maps\\map.txt");
+    Console.OutputEncoding = System.Text.Encoding.UTF8;
+    ReachTheFlagGame game = new ReachTheFlagGame("D:\\my-projects\\VersionTest\\ConsoleApp1\\Maps\\map.json");
 
     while (true)
     {

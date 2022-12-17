@@ -1,7 +1,6 @@
 ﻿using ReachTheFlag.Cells;
 using ReachTheFlag.Logic.Statistics;
 using ReachTheFlag.Structure;
-using System.Diagnostics;
 
 namespace ReachTheFlag.Utils
 {
