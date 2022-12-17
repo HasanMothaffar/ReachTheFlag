@@ -18,16 +18,10 @@
             base.OnPlayerLeave();
         }
 
-        public override bool CanBeVisited()
-        {
-            return true;
-        }
+        public override bool CanBeVisited() => true;
 
-        public override bool IsValid()
-        {
-            // Player should be standing on this cell to be considered valid
-            return IsPlayerVisiting;
-        }
+        // Player should be standing on this cell to be considered valid
+        public override bool IsValid() => IsPlayerVisiting;
 
         public override void OnPlayerEnter()
         {

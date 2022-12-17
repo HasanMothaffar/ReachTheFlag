@@ -22,8 +22,8 @@
 
         public override void OnPlayerLeave()
         {
-            this.allowedNumberOfSteps--;
-            this.Symbol = this.Symbol = allowedNumberOfSteps.ToString();
+            allowedNumberOfSteps--;
+            Symbol = allowedNumberOfSteps.ToString();
 
             if (this.allowedNumberOfSteps == 0)
             {
@@ -33,14 +33,7 @@
             base.OnPlayerLeave();
         }
 
-        public override bool CanBeVisited()
-        {
-            return this.allowedNumberOfSteps > 0;
-        }
-
-        public override bool IsValid()
-        {
-            return !this.CanBeVisited();
-        }
+        public override bool CanBeVisited() => allowedNumberOfSteps > 0;
+        public override bool IsValid() => !CanBeVisited();
     }
 }

@@ -29,15 +29,8 @@ namespace ReachTheFlag.Cells
             throw new CellImpossibleToReachException();
         }
 
-        public override bool CanBeVisited()
-        {
-            return false;
-        }
-
-        public override bool IsValid()
-        {
-            return true;
-        }
+        public override bool CanBeVisited() => false;
+        public override bool IsValid() => true;
 
         public override void OnPlayerEnter()
         {
