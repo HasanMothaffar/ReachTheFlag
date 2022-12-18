@@ -9,7 +9,7 @@ namespace ReachTheFlag.Logic
         protected int NumberOfVisitedNotes = 0;
         protected Dictionary<BoardCell, BoardCell?> Parents = new();
 
-        protected GraphBasedSolver(string name, GameState node) : base(name, node) 
+        protected GraphBasedSolver(string name, GameState node) : base(name, node)
         {
             Parents[this.InitialNode.PlayerCell] = null;
         }
@@ -17,7 +17,7 @@ namespace ReachTheFlag.Logic
         protected override void FillStatisticsData()
         {
             Stack<BoardCell> stack = new();
-            BoardCell? c = Parents[FinalState.PlayerCell];
+            BoardCell? c = Parents[Statistics.FinalState.PlayerCell];
 
             while (c is not null)
             {

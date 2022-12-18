@@ -1,24 +1,18 @@
 ﻿using ReachTheFlag.Cells;
 using ReachTheFlag.Game;
-using ReachTheFlag.Logic.Solvers.AStar;
 using ReachTheFlag.Structure;
 
-namespace ReachTheFlag.Logic
+namespace ReachTheFlag.Logic.Solvers.GraphSolvers
 {
-    public class AStarSolver : GraphBasedSolver
+    internal class UniformCostSolver : GraphBasedSolver
     {
-        private readonly int[][] _dist;
-        private readonly double[][] _heuristicValues;
+        private int[][] _dist;
+        private BoardCell[][] _cells;
 
-        private readonly BoardCell[][] _cells;
-
-        public AStarSolver(GameState initialNode) : base("A* (star)", initialNode)
+        public UniformCostSolver(GameState initialNode) : base("Uniform Cost", initialNode)
         {
-            this._cells = initialNode.Board.GetAllCells();
-            this._dist = getDistancesArray();
-
-            AStarHeuristic heuristic = new AStarManhattanHeuristic();
-            this._heuristicValues = heuristic.GetHeuristicArrayForBoard(initialNode.Board);
+            _cells = initialNode.Board.GetAllCells();
+            _dist = getDistancesArray();
         }
 
         private int[][] getDistancesArray()
@@ -39,12 +33,13 @@ namespace ReachTheFlag.Logic
 
             return dist;
         }
-        public override void Solve()
+
+        public override GameStatus Solve()
         {
             GameState? finalState = null;
 
-            PriorityQueue<GameState, double> queue = new();
-            queue.Enqueue(this.InitialNode, 0);
+            PriorityQueue<GameState, int> queue = new();
+            queue.Enqueue(InitialNode, 0);
 
             while (queue.Count > 0)
             {
@@ -59,10 +54,8 @@ namespace ReachTheFlag.Logic
 
                     if (possibleShortestDistance < _dist[neighbor.X][neighbor.Y])
                     {
+                        queue.Enqueue(neighbor, possibleShortestDistance);
                         _dist[neighbor.X][neighbor.Y] = possibleShortestDistance;
-
-                        double priority = possibleShortestDistance + _heuristicValues[neighbor.X][neighbor.Y];
-                        queue.Enqueue(neighbor, priority);
 
                         Parents[neighbor.PlayerCell] = currentState.PlayerCell;
 
@@ -74,14 +67,16 @@ namespace ReachTheFlag.Logic
                 }
             }
 
-            this.FinalState = finalState;
+            Statistics.FinalState = finalState;
+            return finalState is null ? GameStatus.ImpossibleToWin : GameStatus.Win;
         }
 
         protected override void FillStatisticsData()
         {
-            var flagCell = this.InitialNode.Board.FlagCell;
-            this.Statistics.ShortestPathCost = _dist[flagCell.X][flagCell.Y];
-            this.Statistics.ShortestPathsArray = _dist;
+            var flagCell = InitialNode.Board.FlagCell;
+            Statistics.ShortestPathCost = _dist[flagCell.X][flagCell.Y];
+            Statistics.ShortestPathsArray = _dist;
+            base.FillStatisticsData();
         }
     }
 }

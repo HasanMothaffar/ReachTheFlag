@@ -1,51 +1,42 @@
 ﻿using ReachTheFlag.Exceptions;
+using ReachTheFlag.Game;
 using ReachTheFlag.Logic.Statistics;
 using ReachTheFlag.Structure;
-using ReachTheFlag.Utils;
+using ReachTheFlag.UI;
 
 namespace ReachTheFlag.Logic
 {
     public abstract class GameSolver
     {
-        protected GameState FinalState;
-        protected readonly GameState InitialNode;
-
+        protected GameState InitialNode { get; private set; }
         public string Name { get; protected set; }
-        protected SolvedGameStatistics Statistics;
+
+        protected readonly GameStatistics Statistics;
+        protected readonly GameUI? UserInterface;
+
+        public GameSolver(string name, GameState node, GameUI ui): this(name, node)
+        {
+            UserInterface = ui;
+        }
 
         public GameSolver(string name, GameState node)
         {
             Name = name;
             InitialNode = node;
-            Statistics = new SolvedGameStatistics();
+            Statistics = new GameStatistics();
         }
 
-        public abstract void Solve();
-        public void SolveAndPrintSolutionStatistics()
+        public abstract GameStatus Solve();
+        public GameStatistics SolveAndGetStatistics()
         {
             Statistics.StartTimer();
+            Statistics.Status = Solve();
+            Statistics.StopTimer();
 
-            try
-            {
-                Solve();
-                Statistics.StopTimer();
-                printStatistics();
-            }
-
-            catch (GameImpossibleToSolveException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-
-        private void printStatistics()
-        {
             FillStatisticsData();
 
-            Printer.PrintBoard(FinalState.Board);
-            Printer.PrintStatistics(Statistics);
+            return Statistics;
         }
-
         protected virtual void FillStatisticsData() { }
     }
 }

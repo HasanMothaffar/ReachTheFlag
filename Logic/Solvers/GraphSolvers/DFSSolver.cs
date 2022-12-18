@@ -1,19 +1,18 @@
-﻿using ReachTheFlag.Exceptions;
-using ReachTheFlag.Game;
+﻿using ReachTheFlag.Game;
 using ReachTheFlag.Structure;
 
-namespace ReachTheFlag.Logic
+namespace ReachTheFlag.Logic.Solvers.GraphSolvers
 {
     public class DFSSolver : GraphBasedSolver
     {
         public DFSSolver(GameState initialNode) : base("DFS", initialNode) { }
 
-        public override void Solve()
+        public override GameStatus Solve()
         {
             GameState? finalState = null;
 
             Stack<GameState> stack = new();
-            stack.Push(this.InitialNode);
+            stack.Push(InitialNode);
 
             bool shouldQuitLoop = false;
 
@@ -56,10 +55,11 @@ namespace ReachTheFlag.Logic
 
             if (finalState is null)
             {
-                throw new GameImpossibleToSolveException("Game is impossible to solve.");
+                return GameStatus.ImpossibleToWin;
             }
 
-            this.FinalState = finalState;
+            Statistics.FinalState = finalState;
+            return GameStatus.Win;
         }
 
     }

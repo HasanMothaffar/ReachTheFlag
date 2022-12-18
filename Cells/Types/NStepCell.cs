@@ -6,8 +6,8 @@ namespace ReachTheFlag.Cells
     {
         private int allowedNumberOfSteps;
 
-        private static ConsoleColor _playerIsVisitingColor = ConsoleColor.Yellow;
-        private static ConsoleColor _noMoreAllowedStepsColor = ConsoleColor.Red;
+        private static CellColor _playerIsVisitingColor = CellColor.Yellow;
+        private static CellColor _noMoreAllowedStepsColor = CellColor.Red;
 
         public NStepCell(int x, int y, int allowedNumberOfSteps = 1, int weight = 1) : base(x, y, weight)
         {

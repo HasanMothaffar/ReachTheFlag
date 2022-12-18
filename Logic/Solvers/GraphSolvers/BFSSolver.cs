@@ -2,13 +2,13 @@
 using ReachTheFlag.Game;
 using ReachTheFlag.Structure;
 
-namespace ReachTheFlag.Logic
+namespace ReachTheFlag.Logic.Solvers.GraphSolvers
 {
     public class BFSSolver : GraphBasedSolver
     {
         public BFSSolver(GameState initialNode) : base("BFS", initialNode) { }
 
-        public override void Solve()
+        public override GameStatus Solve()
         {
             GameState? finalState = null;
 
@@ -51,12 +51,8 @@ namespace ReachTheFlag.Logic
                 }
             }
 
-            if (finalState is null)
-            {
-                throw new GameImpossibleToSolveException("Game is impossible to solve.");
-            }
-
-            this.FinalState = finalState;
+            Statistics.FinalState = finalState;
+            return finalState is null ? GameStatus.ImpossibleToWin : GameStatus.Win;
         }
     }
 }

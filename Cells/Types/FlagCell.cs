@@ -4,8 +4,8 @@ namespace ReachTheFlag.Cells
 {
     class FlagCell : BoardCell
     {
-        private static ConsoleColor _onPlayerEnterColor = ConsoleColor.Green;
-        private static ConsoleColor _originalColor = ConsoleColor.Magenta;
+        private static CellColor _onPlayerEnterColor = CellColor.Green;
+        private static CellColor _originalColor = CellColor.Magenta;
 
         public FlagCell(int x, int y, int weight = 1) : base(x, y, weight)
         {

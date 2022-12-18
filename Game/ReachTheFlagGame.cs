@@ -1,48 +1,70 @@
 ﻿using ReachTheFlag.Logic;
+using ReachTheFlag.Logic.Statistics;
 using ReachTheFlag.Structure;
-using ReachTheFlag.Utils;
+using ReachTheFlag.UI;
+using System.Xml.Linq;
 
 namespace ReachTheFlag.Game
 {
     public class ReachTheFlagGame
     {
         // For restarting the game
-        private readonly GameState _originalState;
-        private GameState _currentState;
+        private GameState _originalState;
+        public GameState CurrentState { get; private set; }
+        public GameUI UserInterface { get; private set; }
 
-        public ReachTheFlagGame(string mapFilePath)
+        public readonly List<GameMap> AvailableMaps;
+        public string CurrentMap { get; private set; }
+
+        public ReachTheFlagGame(string mapsDirectory)
         {
-            GameBoard parsedBoard = MapParser.ParseBoardMap(mapFilePath);
+            AvailableMaps = new List<GameMap>();
 
-            _currentState = new GameState(parsedBoard);
-            _originalState = _currentState.Clone();
+            DirectoryInfo di = new DirectoryInfo(mapsDirectory);
+            FileInfo[] files = di.GetFiles("*.json");
 
-            Printer.PrintBoard(this._currentState.Board);
+            for (var i = 0; i < files.Length; i++)
+            {
+                var filename = Path.GetFileNameWithoutExtension(files[i].Name);
+                GameBoard board = MapParser.ParseBoardMap(files[i].FullName);
+                AvailableMaps.Add(new GameMap(i + 1, filename, board, files[i].FullName));
+            }
         }
 
-        public GameStatus GetStatus()
+        public void SetUserInterface(AvailableGameUI ui)
         {
-            if (_currentState.IsFinal()) return GameStatus.Win;
-            if (_currentState.IsPlayerStuck()) return GameStatus.Lose;
+            if (ui == AvailableGameUI.Terminal) UserInterface = new TerminalUI(this);
+            else if (ui == AvailableGameUI.Raylib) UserInterface = new RaylibUI(this);
+        }
 
-            return GameStatus.Playing;
+        public void SetMap(string map)
+        {
+            GameBoard parsedBoard = MapParser.ParseBoardMap(map);
+
+            CurrentState = new GameState(parsedBoard);
+            _originalState = CurrentState.Clone();
         }
 
         public void Restart()
         {
-            _currentState = _originalState.Clone();
+            CurrentState = _originalState.Clone();
         }
 
-        public void SolveAndPrintSolutionStatistics(SolverStrategy strategy)
+        public GameStatistics Solve(SolverStrategy strategy, GameUI? ui)
         {
-            GameSolver solver = SolverFactory.GetSolverForGame(strategy, _currentState);
-            solver.SolveAndPrintSolutionStatistics();
-        }
+            GameSolver solver = SolverFactory.GetSolverForGame(strategy, CurrentState, ui);
+            GameStatistics statistics = solver.SolveAndGetStatistics();
+            CurrentState = statistics.FinalState;
 
-        public void Solve(SolverStrategy strategy)
+            return statistics;
+        }
+        public GameStatistics Solve(SolverStrategy strategy)
         {
-            GameSolver solver = SolverFactory.GetSolverForGame(strategy, _currentState);
-            solver.Solve();
+            GameSolver solver = SolverFactory.GetSolverForGame(strategy, CurrentState, null);
+            GameStatistics statistics = solver.SolveAndGetStatistics();
+            CurrentState = statistics.FinalState;
+
+            return statistics;
         }
     }
 }

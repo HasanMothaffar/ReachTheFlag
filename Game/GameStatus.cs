@@ -3,7 +3,8 @@
     public enum GameStatus
     {
         Win,
-        Lose,
-        Playing
+        PlayerIsStuck,
+        ImpossibleToWin,
+        Pending
     }
 }

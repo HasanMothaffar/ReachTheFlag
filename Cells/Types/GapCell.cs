@@ -11,7 +11,7 @@ namespace ReachTheFlag.Cells
         private GapCell() : base(-1, -1, 0)
         {
             Symbol = CellPrintSymbols.Gap;
-            Color = ConsoleColor.Blue;
+            Color = CellColor.Blue;
         }
 
         // Gap cells don't have state, therefore one instance suffices.

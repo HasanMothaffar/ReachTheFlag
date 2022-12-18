@@ -14,7 +14,7 @@ namespace ReachTheFlag.Cells
         public bool IsFlag { get; protected set; }
         public string Symbol { get; protected set; }
         public string NextMoveSymbol { get; protected set; }
-        public ConsoleColor Color { get; protected set; }
+        public CellColor Color { get; protected set; }
 
         public bool IsVisited { get; private set; }
         public bool IsPlayerVisiting { get; private set; }
@@ -30,7 +30,7 @@ namespace ReachTheFlag.Cells
             IsFlag = false;
 
             Symbol = "default";
-            Color = ConsoleColor.White;
+            Color = CellColor.White;
 
             _moveDirectionSymbols = new()
             {

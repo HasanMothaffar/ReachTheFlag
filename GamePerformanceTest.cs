@@ -8,9 +8,9 @@ namespace ReachTheFlag
     public class GamePerformanceTest
     {
         private ReachTheFlagGame _game;
-        public GamePerformanceTest()
+        public GamePerformanceTest(ReachTheFlagGame game)
         {
-            _game = new ReachTheFlagGame("D:\\my-projects\\VersionTest\\ConsoleApp1\\Maps\\map.txt");
+            _game = game;
         }
 
         public void CalculateAndDisplayAverageRuntimes(int iterationsCount)

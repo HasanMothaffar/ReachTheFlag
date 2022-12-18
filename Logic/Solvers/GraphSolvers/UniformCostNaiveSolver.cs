@@ -1,19 +1,18 @@
 ﻿using ReachTheFlag.Game;
 using ReachTheFlag.Structure;
-using System.Linq;
 
-namespace ReachTheFlag.Logic
+namespace ReachTheFlag.Logic.Solvers.GraphSolvers
 {
     internal class UniformCostNaiveSolver : GraphBasedSolver
     {
         public UniformCostNaiveSolver(GameState initialNode) : base("Uniform Cost", initialNode) { }
 
-        public override void Solve()
+        public override GameStatus Solve()
         {
             GameState? finalState = null;
 
             PriorityQueue<GameState, int> queue = new();
-            queue.Enqueue(this.InitialNode, 0);
+            queue.Enqueue(InitialNode, 0);
 
             bool shouldBreakLoop = false;
 
@@ -28,7 +27,7 @@ namespace ReachTheFlag.Logic
                 if (shouldBreakLoop) break;
 
                 GameState currentState = queue.Dequeue();
-                
+
                 foreach (KeyValuePair<MoveDirection, GameState> kvp in currentState.GetAllNeighboringStates())
                 {
                     GameState neighbor = kvp.Value;
@@ -49,7 +48,8 @@ namespace ReachTheFlag.Logic
                 }
             }
 
-            this.FinalState = finalState;
+            Statistics.FinalState = finalState;
+            return finalState is null ? GameStatus.ImpossibleToWin : GameStatus.Win;
         }
     }
 }

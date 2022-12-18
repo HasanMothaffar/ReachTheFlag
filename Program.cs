@@ -1,72 +1,49 @@
-﻿using ReachTheFlag;
-using ReachTheFlag.ExtensionMethods;
-using ReachTheFlag.Game;
-using ReachTheFlag.Logic;
+﻿using ReachTheFlag.Game;
+using ReachTheFlag.UI;
 
-SolverStrategy GetSolveStrategyFromUserInput()
-{    
-    Console.WriteLine("Choose solving strategy:");
-    foreach (SolverStrategy solverType in Enum.GetValues(typeof(SolverStrategy)))
+
+AvailableGameUI ChooseGameUI()
+{
+    AvailableGameUI? chosenUI = null;
+
+    while (chosenUI is null)
     {
-        Console.WriteLine($"{(int)solverType}: {solverType}");
+        Console.WriteLine("Choose display style: ");
+        Console.WriteLine("1. Terminal ");
+        Console.WriteLine("2. GUI (Raylib) ");
+
+        char pressedKey = Console.ReadKey(true).KeyChar;
+        string type = pressedKey.ToString().ToLower();
+        Console.Clear();
+
+        if (Enum.TryParse(type, out AvailableGameUI ui) && Enum.IsDefined(ui))
+        {
+            chosenUI = ui;
+        }
     }
 
-    Console.WriteLine("-----------");
-
-    char pressedKey = Console.ReadKey(true).KeyChar;
-    string type = pressedKey.ToString();
-
-    Console.Clear();
-
-
-    if (Enum.TryParse(type, out SolverStrategy solverStrategy))
-    {
-        Console.WriteLine($"Chosen strategy: {solverStrategy.DisplayName()}");
-        return solverStrategy;
-    }
-
-    else
-    {
-        Console.WriteLine("Unknown key was input: Falling back to user input strategy.");
-        return SolverStrategy.UserInput;
-    }
+    return (AvailableGameUI)chosenUI;
 }
 
 void Main()
 {
+    // For displaying emojis in windows temrinal correctly
     Console.OutputEncoding = System.Text.Encoding.UTF8;
-    ReachTheFlagGame game = new ReachTheFlagGame("D:\\my-projects\\VersionTest\\ConsoleApp1\\Maps\\map.json");
 
-    while (true)
-    {
-        SolverStrategy strategy = GetSolveStrategyFromUserInput();
-        game.SolveAndPrintSolutionStatistics(strategy);
+    ReachTheFlagGame game = new("D:\\my-projects\\VersionTest\\ConsoleApp1\\Maps\\");
 
-        Console.WriteLine("Press r to restart the game, or any other key to quit.");
-
-        char pressedKey = Console.ReadKey(true).KeyChar;
-        string pressedKeyInLowercase = pressedKey.ToString().ToLower();
-
-        if (pressedKeyInLowercase == "r")
-        {
-            Console.Clear();
-            game.Restart();
-        }
-
-        else
-        {
-            break;
-        }
-    }
-}
-
-void TestGamePerformance()
-{
-    GamePerformanceTest testSuite = new GamePerformanceTest();
-    testSuite.CalculateAndDisplayAverageRuntimes(2);
-    Console.WriteLine();
-    //t.CalculateAndDisplayAverageRuntimes(10);
+    var ui = ChooseGameUI();
+    game.SetUserInterface(ui);
+    game.UserInterface.Run();
 }
 
 Main();
+
+//void TestAlgorithmRuntimes()
+//{
+//    GamePerformanceTest testSuite = new GamePerformanceTest();
+//    testSuite.CalculateAndDisplayAverageRuntimes(2);
+//    Console.WriteLine();
+//}
+
 //TestAlgorithmRuntimes();

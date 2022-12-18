@@ -1,6 +1,6 @@
 ﻿using ReachTheFlag.Cells;
 
-namespace ReachTheFlag.Logic.Solvers.AStar
+namespace ReachTheFlag.Logic.Solvers.GraphSolvers.AStar
 {
     internal class AStarManhattanHeuristic : AStarHeuristic
     {

@@ -1,7 +1,7 @@
 ﻿using ReachTheFlag.Cells;
 using ReachTheFlag.Structure;
 
-namespace ReachTheFlag.Logic.Solvers.AStar
+namespace ReachTheFlag.Logic.Solvers.GraphSolvers.AStar
 {
     public abstract class AStarHeuristic
     {

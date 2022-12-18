@@ -1,8 +1,9 @@
-﻿using ReachTheFlag.Structure;
+﻿using ReachTheFlag.Game;
+using ReachTheFlag.Structure;
 using System.Diagnostics;
 
 namespace ReachTheFlag.Logic.Statistics {
-    public class SolvedGameStatistics
+    public class GameStatistics
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();
         public int? SolutionDepth { get; set; }
@@ -16,7 +17,11 @@ namespace ReachTheFlag.Logic.Statistics {
 
         public double ElapsedSeconds => _stopwatch.Elapsed.TotalSeconds;
 
-        public SolvedGameStatistics() 
+        public GameState FinalState { get; set; }
+
+        public GameStatus Status { get; set; } = GameStatus.Pending;
+
+        public GameStatistics() 
         { 
             PlayerPath = new PlayerPath();
         }
