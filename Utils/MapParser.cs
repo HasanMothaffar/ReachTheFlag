@@ -69,6 +69,8 @@ namespace ReachTheFlag.Game
             string json = readBoardMapFile(boardFilename);
             var board = JsonConvert.DeserializeObject<string[][]>(json);
 
+            if (board is null) throw new InvalidBoardException("Please provide a valid JSON file for the map.");
+
             BoardCell[][] cellsArray = new BoardCell[board.Length][];
 
             for (int i = 0; i < board.Length; i++)
