@@ -5,7 +5,6 @@ using ReachTheFlag.Game;
 using ReachTheFlag.Logic.Statistics;
 using ReachTheFlag.Structure;
 using ReachTheFlag.Cells;
-using System.Numerics;
 
 namespace ReachTheFlag.UI
 {
@@ -15,8 +14,6 @@ namespace ReachTheFlag.UI
         private SolverStrategy? _solverStrategy;
         private GameStatistics? _gameStatistics;
         private string? level;
-
-        private Font _emojiFont;
 
         private static Dictionary<CellColor, Color> _cellColors = new()
         {
@@ -101,21 +98,10 @@ namespace ReachTheFlag.UI
                     _gameStatistics = _game.Solve((SolverStrategy)_solverStrategy, this);
                 }
 
-                else if (status == GameStatus.Win)
+                if (status is not null && status != GameStatus.Pending)
                 {
-                    Raylib.DrawText("Game is solved!", 12, 64, 24, Color.BLACK);
                     DisplayGameStatistics(_gameStatistics);
-
-                    Raylib.DrawText("Press r to restart the game", 12, 600, 24, Color.BLACK);
                 }
-
-                else if (status == GameStatus.PlayerIsStuck)
-                {
-                    Raylib.DrawText("You lose :(", 12, 60, 24, Color.BLACK);
-                    Raylib.DrawText("Press r to restart the game", 12, 600, 24, Color.BLACK);
-                }
-
-                
 
                 Raylib.EndDrawing();
             }
@@ -125,12 +111,31 @@ namespace ReachTheFlag.UI
 
         public override void DisplayGameStatistics(GameStatistics statistics)
         {
-            DisplayBoard(statistics.FinalState.Board);
+            if (statistics.Status == GameStatus.Win)
+            {
+                Raylib.DrawText("Game is solved!", 12, 64, 24, Color.BLACK);
+                Raylib.DrawText("Press r to restart the game", 12, 600, 24, Color.BLACK);
+            }
 
-            int index = 0;
+            else if (statistics.Status == GameStatus.PlayerIsStuck)
+            {
+                Raylib.DrawText("You lose :(", 12, 60, 24, Color.BLACK);
+                Raylib.DrawText("Press r to restart the game", 12, 600, 24, Color.BLACK);
+                return;
+            }
+            
+            else if (statistics.Status == GameStatus.ImpossibleToWin)
+            {
+                Raylib.DrawText("Game is impossible to win", 12, 60, 24, Color.BLACK);
+                Raylib.DrawText("Press r to restart the game", 12, 600, 24, Color.BLACK);
+                return;
+            }
+
+            DisplayBoard(statistics.FinalState.Board);
 
             int textPositionX = 12;
             int[] textPositionsY = { 100, 120, 140, 160, 180, 200 };
+            int index = 0;
 
             Raylib.DrawText($"Elapsed seconds: {statistics.ElapsedSeconds}", textPositionX, textPositionsY[index++], 20, Color.BLACK);
 

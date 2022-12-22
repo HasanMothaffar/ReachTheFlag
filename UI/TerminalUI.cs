@@ -97,6 +97,7 @@ namespace ReachTheFlag.UI
         {
             if (statistics.Status == GameStatus.Win) Console.WriteLine("You won!");
             else if (statistics.Status == GameStatus.PlayerIsStuck) Console.WriteLine("Player is stuck :(");
+            else if (statistics.Status == GameStatus.ImpossibleToWin) Console.WriteLine("Game is impossible to win.");
 
             Console.WriteLine("Elapsed time: {0}s", statistics.ElapsedSeconds);
 

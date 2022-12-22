@@ -37,7 +37,7 @@ namespace ReachTheFlag.Logic.Solvers.KeyboardSolvers
 
                 if (InitialNode.IsPlayerStuck())
                 {
-                    return GameStatus.ImpossibleToWin;
+                    return GameStatus.PlayerIsStuck;
                 }
             }
         }
