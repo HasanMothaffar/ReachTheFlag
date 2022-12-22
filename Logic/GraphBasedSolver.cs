@@ -23,11 +23,6 @@ namespace ReachTheFlag.Logic
                 c = Parents[c];
                 this.Statistics.SolutionDepth++;
             }
-
-            while (stack.Count > 0)
-            {
-                this.Statistics.PlayerPath.AddCell(stack.Pop());
-            }
         }
     }
 }

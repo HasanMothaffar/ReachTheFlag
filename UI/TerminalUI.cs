@@ -93,32 +93,6 @@ namespace ReachTheFlag.UI
             DisplayBoard(board);
         }
 
-        public void DisplayPlayerPath(PlayerPath path)
-        {
-            var cells = path.GetCells();
-            if (cells.Count == 0) return;
-
-            Console.Write("Player path: ");
-
-            for (var i = 0; i < cells.Count; i++)
-            {
-                if (i == cells.Count - 1)
-                {
-                    Console.Write(cells[i]);
-                }
-
-                else
-                {
-                    Console.Write($"{cells[i]} -> ");
-                }
-
-                // Print a new line every 10 items to make output more readable
-                if (i % 10 == 0) Console.WriteLine();
-            }
-
-            Console.WriteLine();
-        }
-
         public override void DisplayGameStatistics(GameStatistics statistics)
         {
             if (statistics.Status == GameStatus.Win) Console.WriteLine("You won!");

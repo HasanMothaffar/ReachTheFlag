@@ -14,15 +14,9 @@ namespace ReachTheFlag.Logic.Statistics {
         public int ShortestPathCost = 0;
 
         public int[][]? ShortestPathsArray;
-        public readonly PlayerPath PlayerPath;
 
         public GameState FinalState;
         public GameStatus Status = GameStatus.Pending;
-
-        public GameStatistics() 
-        { 
-            PlayerPath = new PlayerPath();
-        }
 
         public void StartTimer()
         {

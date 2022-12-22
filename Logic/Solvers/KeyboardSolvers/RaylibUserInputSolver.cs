@@ -17,7 +17,6 @@ namespace ReachTheFlag.Logic.Solvers.KeyboardSolvers
 
         public RaylibUserInputSolver(GameState initialNode, GameUI ui) : base("User Input", initialNode, ui)
         {
-            Statistics.PlayerPath.AddCell(InitialNode.PlayerCell);
             Statistics.FinalState = InitialNode;
         }
 
@@ -49,7 +48,6 @@ namespace ReachTheFlag.Logic.Solvers.KeyboardSolvers
                 MoveDirection direction = _moveDirections[keyPressed];
 
                 InitialNode.MovePlayerToDirection(direction);
-                Statistics.PlayerPath.AddCell(InitialNode.PlayerCell);
                 Statistics.NumberOfPlayerMoves++;
             }
         }

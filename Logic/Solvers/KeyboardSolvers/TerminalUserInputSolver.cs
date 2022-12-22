@@ -16,7 +16,6 @@ namespace ReachTheFlag.Logic.Solvers.KeyboardSolvers
 
         public TerminalUserInputSolver(GameState initialNode, GameUI ui) : base("User Input", initialNode, ui)
         {
-            Statistics.PlayerPath.AddCell(InitialNode.PlayerCell);
             Statistics.FinalState = InitialNode;
         }
 
@@ -55,7 +54,6 @@ namespace ReachTheFlag.Logic.Solvers.KeyboardSolvers
                 Console.WriteLine($"Move direction: {direction}");
 
                 InitialNode.MovePlayerToDirection(direction);
-                Statistics.PlayerPath.AddCell(InitialNode.PlayerCell);
                 Statistics.NumberOfPlayerMoves++;
             }
         }
