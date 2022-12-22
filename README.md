@@ -14,10 +14,14 @@ You have to carefully walk the grid so that you don't get stuck in a state from 
 
 ## How To Play
 
-When the game starts, you can select how you want to solve it:
+When the game starts, select the user interface that you want:
 
--   Select **1** if you want to play the game yourself using the keyboard and the controls below
--   Select any other number to let the computer solve the game. Beside each number is the name of the algorithm that the computer will use
+- Terminal Interface
+- GUI (Raylib)
+
+The game now presents you with three levels: Easy, Medium, and Hard.
+
+After choosing the level, you either play the game yourself (User Input), or let the computer play it.
 
 ### Keyboard Controls
 
@@ -31,7 +35,7 @@ A: Move left
 
 ### Symbols
 
-`*`: Current player position. This symbol moves as you press movement keys.
+`*`: Player position. This symbol moves as you press movement keys.
 
 `1`: A cell that allows stepping on it only one time. Once the player steps on it, it will turn to 0.
 
@@ -41,7 +45,6 @@ A: Move left
 
 `f`: Flag cell. This is the cell that you're supposed to be standing on when the game finishes.
 
-`p`: Initial player position. This is where you start the game.
 
 ## Algorithms
 
@@ -54,67 +57,14 @@ Here's a list of the supported algorithms:
 3. BFS: The computer will solve this game using the BFS graph traversal algorithm and display the result
 4. Uniform Cost (Dijkstra): The computer will find the shortest path between the initial player position and flag cell based on constant weights for each cell.
 5. A Star (A\*): The computer will find the shortest path between the initial player position and flag cell based on a heuristic cost function.
+6. Uniform Cost (path finding): Find shortest path from player cell to flag, with respect to the cells' weights
+7. A Star (path finding): Same as 6
 
-## Map
+## Demo
 
-The game reads its map from a text file that is specified in `program.cs`. You can provide your own map file when instantiating the game object:
+![Terminal and GUI Demo](TerminalAndguiDemo.gif)
 
-`string mapFilePath = "map.txt"; ReachTheFlagGame game = new ReachTheFlagGame(mapFilePath);`
+## Technical details
 
-### Map Format
-
-This game requires a special format for map files so it can parse them. The map file should consist of (n) lines \* (m) columns.
-
-Each line represents a row in the game, and it follows this format:
-
-CellType NumberOfAllowedSteps Weight (for path algorithms)
-
-**Examples**:
-
--   `p11`: A player cell that you can step on only once and has weight 1.
--   `n23`: A normal cell that you can step on twice and has weight 3.
--   `g`: A gap cell that you can't step on.
--   `f3`: Flag cell that has weight 3.
-
-**A complete example**:
-
-```
-p11,n13,f3
-g,n21,n24
-```
-
-First row: `p11,n13,f3`
-
-| Cell Type | Allowed Number Of Moves | Weight |
-| --------- | ----------------------- | ------ |
-| Player    | 1                       | 1      |
-| Normal    | 1                       | 1      |
-| Flag      | Infinite                | 3      |
-
-Second row: `g,n21,n24`
-
-| Cell Type | Allowed Number Of Moves | Weight |
-| --------- | ----------------------- | ------ |
-| Gap       | 0                       | 0      |
-| Normal    | 2                       | 1      |
-| Normal    | 2                       | 4      |
-
-### Cell Types
-
--   `n`: Normal cell.
--   `p`: Player cell.
--   `g`: Gap cell.
--   `f`: Flag cell.
-
-**IMPORTANT NOTE:**
-
--   Do not provide allowed number of steps to flag cells. "f11" is wrong. "f1" is right. That's because flag cells have an infinite number of allowed steps.
--   Do not provide neither allowed number of steps or weight to gap cells.
--   Provide only one flag cell and one player cell.
--   Cells in the map file should be separated by commas **WITHOUT SPACES!**
--   Rows in the map are separated by a newline character.
-
-## TODO
-
--   Replace Board.GetAllCells() with iterator pattern
--   Make all map grid n \* m (no jagged arrays) by providing gap cells in the place of empty cells
+Why support two methods of display? I wanted to decouple the core of the game from the presentation layer, which allows any presentation
+object which satisfies the `GameUI` interface to work with the application without knowing how the algorithms of the game work.
