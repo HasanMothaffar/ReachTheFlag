@@ -5,6 +5,7 @@ using ReachTheFlag.Game;
 using ReachTheFlag.Logic.Statistics;
 using ReachTheFlag.Structure;
 using ReachTheFlag.Cells;
+using System.Numerics;
 
 namespace ReachTheFlag.UI
 {
@@ -14,6 +15,8 @@ namespace ReachTheFlag.UI
         private SolverStrategy? _solverStrategy;
         private GameStatistics? _gameStatistics;
         private string? level;
+
+        private Font _emojiFont;
 
         private static Dictionary<CellColor, Color> _cellColors = new()
         {
@@ -35,6 +38,7 @@ namespace ReachTheFlag.UI
             WindowWidth = windowWidth;
             WindowHeight = windowHeight;
             WindowTitle = windowTitle;
+            Raylib.SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_VSYNC_HINT);
             Raylib.InitWindow(WindowWidth, WindowHeight, WindowTitle);
         }
 
@@ -99,14 +103,19 @@ namespace ReachTheFlag.UI
 
                 else if (status == GameStatus.Win)
                 {
-                    Raylib.DrawText("WIN MAN", 12, 60, 24, Color.BLACK);
+                    Raylib.DrawText("Game is solved!", 12, 64, 24, Color.BLACK);
                     DisplayGameStatistics(_gameStatistics);
+
+                    Raylib.DrawText("Press r to restart the game", 12, 600, 24, Color.BLACK);
                 }
 
                 else if (status == GameStatus.PlayerIsStuck)
                 {
-                    Raylib.DrawText("LOSE MAN", 12, 60, 24, Color.BLACK);
+                    Raylib.DrawText("You lose :(", 12, 60, 24, Color.BLACK);
+                    Raylib.DrawText("Press r to restart the game", 12, 600, 24, Color.BLACK);
                 }
+
+                
 
                 Raylib.EndDrawing();
             }
@@ -118,8 +127,17 @@ namespace ReachTheFlag.UI
         {
             DisplayBoard(statistics.FinalState.Board);
 
-            //TerminalUI.DisplayBoard(statistics.FinalState.Board);
-            //TerminalUI.DisplayGameStatistics(statistics);
+            int index = 0;
+
+            int textPositionX = 12;
+            int[] textPositionsY = { 100, 120, 140, 160, 180, 200 };
+
+            Raylib.DrawText($"Elapsed seconds: {statistics.ElapsedSeconds}", textPositionX, textPositionsY[index++], 20, Color.BLACK);
+
+            if (statistics.NumberOfPlayerMoves > 0) Raylib.DrawText($"Number of moves: {statistics.NumberOfPlayerMoves}", textPositionX, textPositionsY[index++], 20, Color.BLACK);
+            if (statistics.SolutionDepth > 0) Raylib.DrawText($"Solution Depth: {statistics.SolutionDepth}", textPositionX, textPositionsY[index++], 20, Color.BLACK);
+            if (statistics.NumberOfVisitedNodes > 0) Raylib.DrawText($"Number of Visited Nodes: {statistics.NumberOfVisitedNodes}", textPositionX, textPositionsY[index++], 20, Color.BLACK);
+            if (statistics.ShortestPathCost > 0) Raylib.DrawText($"Shortest Path Cost: {statistics.ShortestPathCost}", textPositionX, textPositionsY[index++], 20, Color.BLACK);
         }
 
         public override void DisplayBoardInPosition(GameBoard board, int initialPositionX, int initialPositionY)
@@ -162,7 +180,7 @@ namespace ReachTheFlag.UI
 
             foreach (SolverStrategy solverType in Enum.GetValues(typeof(SolverStrategy)))
             {
-                Raylib.DrawText($"{(int)solverType}: {solverType}", 12, index * verticalSpaceBetweenItems, 24, Color.BLACK);
+                Raylib.DrawText($"{(int)solverType}: {solverType.DisplayName()}", 12, index * verticalSpaceBetweenItems, 24, Color.BLACK);
                 index++;
             }
         }
@@ -170,23 +188,21 @@ namespace ReachTheFlag.UI
         public override void DisplayLevelsToChooseFrom()
         {
             Raylib.DrawText("Choose one of these levels: ", 600, 0, 20, Color.BLACK);
+            int[] levelsXPositions = { 20, 500, 1100 };
 
             for (var i = 0; i < _game.AvailableMaps.Count; i++)
             {
                 var map = _game.AvailableMaps[i];
 
-                var rowsCount = map.Board.GetAllCells().Length;
-                int factor = rowsCount > 3 ? 400 : 200;
+                Raylib.DrawText($"{i + 1}. {map.Name}", levelsXPositions[i] + 50, 40, 20, Color.BLACK);
+                DisplayBoardInPosition(map.Board, levelsXPositions[i], 90);
+            }
 
-                Raylib.DrawText($"{i + 1}. {map.Name}", i * factor + 50, 40, 20, Color.BLACK);
-                DisplayBoardInPosition(map.Board, i * factor, 90);
-
-                int key = Raylib.GetKeyPressed() - 49;
-                if (key == i)
-                {
-                    level = _game.AvailableMaps[i].FilePath;
-                    _game.SetMap(level);
-                }
+            int key = Raylib.GetKeyPressed() - 49;
+            if (key >= 0 && key <= 2)
+            {
+                level = _game.AvailableMaps[key].FilePath;
+                _game.SetMap(level);
             }
         }
     }

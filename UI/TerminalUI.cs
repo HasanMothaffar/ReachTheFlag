@@ -126,13 +126,12 @@ namespace ReachTheFlag.UI
 
             Console.WriteLine("Elapsed time: {0}s", statistics.ElapsedSeconds);
 
-            if (statistics.NumberOfVisitedNodes is not null) Console.WriteLine($"Number of visited nodes: {statistics.NumberOfVisitedNodes}");
-            if (statistics.SolutionDepth is not null) Console.WriteLine($"Solution Depth: {statistics.SolutionDepth}");
-            if (statistics.NumberOfPlayerMoves is not null) Console.WriteLine($"Number of moves: {statistics.NumberOfPlayerMoves}");
-            if (statistics.ShortestPathCost is not null) Console.WriteLine($"Shortest Path Cost: {statistics.ShortestPathCost}");
+            if (statistics.NumberOfVisitedNodes > 0) Console.WriteLine($"Number of visited nodes: {statistics.NumberOfVisitedNodes}");
+            if (statistics.SolutionDepth > 0) Console.WriteLine($"Solution Depth: {statistics.SolutionDepth}");
+            if (statistics.NumberOfPlayerMoves > 0) Console.WriteLine($"Number of moves: {statistics.NumberOfPlayerMoves}");
+            if (statistics.ShortestPathCost > 0) Console.WriteLine($"Shortest Path Cost: {statistics.ShortestPathCost}");
 
             DisplayBoard(statistics.FinalState.Board);
-            //PrintPlayerPath(statistics.PlayerPath);
 
             // Shortest path array
             if (statistics.ShortestPathsArray is not null)
@@ -156,7 +155,7 @@ namespace ReachTheFlag.UI
             Console.WriteLine("Choose solving strategy:");
             foreach (SolverStrategy solverType in Enum.GetValues(typeof(SolverStrategy)))
             {
-                Console.WriteLine($"{(int)solverType}: {solverType}");
+                Console.WriteLine($"{(int)solverType}: {solverType.DisplayName()}");
             }
 
             Console.WriteLine("-----------");

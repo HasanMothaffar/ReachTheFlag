@@ -24,7 +24,8 @@ namespace ReachTheFlag.Logic.Solvers.GraphSolvers
 
             while (queue.Count > 0)
             {
-                NumberOfVisitedNotes++;
+                this.Statistics.NumberOfVisitedNodes++;
+
                 if (shouldQuitLoop) break;
                 GameState state = queue.Dequeue();
 

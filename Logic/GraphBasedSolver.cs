@@ -5,8 +5,6 @@ namespace ReachTheFlag.Logic
 {
     public abstract class GraphBasedSolver : GameSolver
     {
-        protected int SolutionDepth = 0;
-        protected int NumberOfVisitedNotes = 0;
         protected Dictionary<BoardCell, BoardCell?> Parents = new();
 
         protected GraphBasedSolver(string name, GameState node) : base(name, node)
@@ -23,7 +21,7 @@ namespace ReachTheFlag.Logic
             {
                 stack.Push(c);
                 c = Parents[c];
-                SolutionDepth++;
+                this.Statistics.SolutionDepth++;
             }
 
             while (stack.Count > 0)

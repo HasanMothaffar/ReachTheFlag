@@ -2,22 +2,17 @@
 using ReachTheFlag.Game;
 using ReachTheFlag.Structure;
 
-namespace ReachTheFlag.Logic.Solvers.GraphSolvers.AStar
+namespace ReachTheFlag.Logic.Solvers.GraphSolvers
 {
-    public class AStarSolver : GraphBasedSolver
+    internal class UniformCostPathFinding : GraphBasedSolver
     {
-        private readonly int[][] _dist;
-        private readonly double[][] _heuristicValues;
+        private int[][] _dist;
+        private BoardCell[][] _cells;
 
-        private readonly BoardCell[][] _cells;
-
-        public AStarSolver(GameState initialNode) : base("A* (star) naive", initialNode)
+        public UniformCostPathFinding(GameState initialNode) : base("Uniform Cost", initialNode)
         {
             _cells = initialNode.Board.GetAllCells();
             _dist = getDistancesArray();
-
-            AStarHeuristic heuristic = new AStarManhattanHeuristic();
-            _heuristicValues = heuristic.GetHeuristicArrayForBoard(initialNode.Board);
         }
 
         private int[][] getDistancesArray()
@@ -38,56 +33,50 @@ namespace ReachTheFlag.Logic.Solvers.GraphSolvers.AStar
 
             return dist;
         }
+
         public override GameStatus Solve()
         {
             GameState? finalState = null;
 
-            PriorityQueue<GameState, double> queue = new();
+            PriorityQueue<GameState, int> queue = new();
             queue.Enqueue(InitialNode, 0);
-
-            HashSet<string> visited = new()
-            {
-                InitialNode.ID
-            };
-
-            bool shouldBreakLoop = false;
 
             while (queue.Count > 0)
             {
                 this.Statistics.NumberOfVisitedNodes++;
-                if (shouldBreakLoop) break;
                 GameState currentState = queue.Dequeue();
 
                 foreach (KeyValuePair<MoveDirection, GameState> kvp in currentState.GetAllNeighboringStates())
                 {
                     GameState neighbor = kvp.Value;
-                    if (visited.Contains(neighbor.ID)) continue;
-                    visited.Add(neighbor.ID);
 
                     int possibleShortestDistance = _dist[currentState.X][currentState.Y] + neighbor.Weight;
-                    double priority = neighbor.Weight + _heuristicValues[neighbor.X][neighbor.Y];
-                    Parents[neighbor.PlayerCell] = currentState.PlayerCell;
 
                     if (possibleShortestDistance < _dist[neighbor.X][neighbor.Y])
                     {
+                        queue.Enqueue(neighbor, possibleShortestDistance);
                         _dist[neighbor.X][neighbor.Y] = possibleShortestDistance;
-                        priority = possibleShortestDistance + _heuristicValues[neighbor.X][neighbor.Y];
+
+                        Parents[neighbor.PlayerCell] = currentState.PlayerCell;
+
+                        if (neighbor.PlayerCell.IsFlag)
+                        {
+                            finalState = neighbor;
+                        }
                     }
-
-                    if (neighbor.IsFinal())
-                    {
-                        finalState = neighbor;
-                        shouldBreakLoop = true;
-                        break;
-                    }
-
-                    queue.Enqueue(neighbor, priority);
-
                 }
             }
 
             Statistics.FinalState = finalState;
             return finalState is null ? GameStatus.ImpossibleToWin : GameStatus.Win;
+        }
+
+        protected override void FillStatisticsData()
+        {
+            var flagCell = InitialNode.Board.FlagCell;
+            Statistics.ShortestPathCost = _dist[flagCell.X][flagCell.Y];
+            Statistics.ShortestPathsArray = _dist;
+            base.FillStatisticsData();
         }
     }
 }

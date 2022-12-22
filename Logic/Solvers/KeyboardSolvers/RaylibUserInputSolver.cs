@@ -23,6 +23,7 @@ namespace ReachTheFlag.Logic.Solvers.KeyboardSolvers
 
         public override GameStatus Solve()
         {
+            Raylib.DrawText("Controls: WASD", 12, 64, 24, Color.BLACK);
             respondToUserInput();
             // Don't change the order of these conditions!
             // If the game is final, the player is technically considered stuck.

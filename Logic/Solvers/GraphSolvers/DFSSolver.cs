@@ -23,7 +23,7 @@ namespace ReachTheFlag.Logic.Solvers.GraphSolvers
 
             while (stack.Count > 0)
             {
-                NumberOfVisitedNotes++;
+                this.Statistics.NumberOfVisitedNodes++;
                 if (shouldQuitLoop) break;
 
                 GameState state = stack.Pop();

@@ -6,20 +6,18 @@ namespace ReachTheFlag.Logic.Statistics {
     public class GameStatistics
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();
-        public int? SolutionDepth { get; set; }
-        public int? NumberOfPlayerMoves { get; set; }
-        public int? NumberOfVisitedNodes { get; set; }
-        public int? ShortestPathCost { get; set; }
-
-        public int[][]? ShortestPathsArray { get; set; }
-
-        public readonly PlayerPath PlayerPath;
-
         public double ElapsedSeconds => _stopwatch.Elapsed.TotalSeconds;
 
-        public GameState FinalState { get; set; }
+        public int SolutionDepth = 0;
+        public int NumberOfPlayerMoves = 0;
+        public int NumberOfVisitedNodes = 0;
+        public int ShortestPathCost = 0;
 
-        public GameStatus Status { get; set; } = GameStatus.Pending;
+        public int[][]? ShortestPathsArray;
+        public readonly PlayerPath PlayerPath;
+
+        public GameState FinalState;
+        public GameStatus Status = GameStatus.Pending;
 
         public GameStatistics() 
         { 

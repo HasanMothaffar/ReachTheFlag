@@ -19,10 +19,10 @@ namespace ReachTheFlag.Logic
 
                 SolverStrategy.DFS => new DFSSolver(initialNode),
                 SolverStrategy.BFS => new BFSSolver(initialNode),
-                SolverStrategy.UniformCost => new UniformCostSolver(initialNode),
+                SolverStrategy.UniformCostPathFinding => new UniformCostPathFinding(initialNode),
+                SolverStrategy.AStarPathFinding => new AStarPathFinding(initialNode),
                 SolverStrategy.AStar => new AStarSolver(initialNode),
-                SolverStrategy.AStarNaive => new AStarNaiveSolver(initialNode),
-                SolverStrategy.UniformCostNaive => new UniformCostNaiveSolver(initialNode),
+                SolverStrategy.UniformCost => new UniformCostSolver(initialNode),
 
                 _ => new TerminalUserInputSolver(initialNode, ui)
             };

@@ -16,13 +16,13 @@ namespace ReachTheFlag.Logic
         [Description("Uniform Cost")]
         UniformCost = 4,
 
-        [Description("Uniform Cost (naive)")]
-        UniformCostNaive = 5,
+        [Description("A*")]
+        AStar = 5,
 
-        [Description("A* (A Star)")]
-        AStar = 6,
+        [Description("Uniform Cost (path finding)")]
+        UniformCostPathFinding = 6,
 
-        [Description("A* (A Star naive)")]
-        AStarNaive = 7
+        [Description("A* (path finding)")]
+        AStarPathFinding = 7
     }
 }
