@@ -5,6 +5,12 @@ using ReachTheFlag.Structure;
 
 namespace ReachTheFlag.Game
 {
+    /**
+     * Internal map format:
+     * CellType | Allowed Number Of Moves | Weight
+     * 
+     * Second and third fields can be optional in some cases
+     * */
     public class MapParser
     {
         private static int _flagCellsCount = 0;
