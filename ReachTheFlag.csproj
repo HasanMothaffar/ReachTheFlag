@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="حسن_مظفر_فئة_2_خوارزميات_بحث_ذكية_2022_14_11.rar" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Raylib-cs" Version="4.2.0.1" />
   </ItemGroup>
 
 </Project>
