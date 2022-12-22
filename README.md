@@ -62,7 +62,7 @@ Here's a list of the supported algorithms:
 
 ## Demo
 
-![Terminal and GUI Demo](TerminalAndGUIDemo.gif)
+![Terminal and GUI Demo](TerminalAndGUIDEmo.gif)
 
 ## Technical details
 
