@@ -16,8 +16,8 @@ You have to carefully walk the grid so that you don't get stuck in a state from 
 
 When the game starts, select the user interface that you want:
 
-- Terminal Interface
-- GUI (Raylib)
+-   Terminal Interface
+-   GUI (Raylib)
 
 The game now presents you with three levels: Easy, Medium, and Hard.
 
@@ -45,7 +45,6 @@ A: Move left
 
 `f`: Flag cell. This is the cell that you're supposed to be standing on when the game finishes.
 
-
 ## Algorithms
 
 The goal of this project is to demonstrate the usage of different algorithms (DFS, BFS, Uniform Cost) in a real-life scenario (in our case, a game).
@@ -64,7 +63,58 @@ Here's a list of the supported algorithms:
 
 ![Terminal and GUI Demo](TerminalAndGUIDEmo.gif)
 
+## Maps
+
+When you start the application, you can choose one of three predefined maps to play.
+
+You can also modify a map's JSON file to specify your own game.
+
+### Map Structure
+
+The JSON file is a 2D array that contains the rows of the map.
+
+Each row item has the following format: `Cell Type (*) | Number Of Allowed Moves | Weight`
+
+-   Cell type: `n` for normal cells, `g` for gap cells, `f` for the flag cell, and `p` for the player cell.
+-   `Number Of Allowed Moves`: How many times can the user step on a normal cell. It is not applicable for gap and flag cells.
+-   `Weight` how much it costs the player to step on a cell (useful for pathfinding algorithms). `Weight` is only not applicable for gap cells.
+
+Note that the array's dimensions have to be equal to each other (a square array that consists of `n * n` cells).
+
+Let's examine the `Maps/medium.json` map as an example:
+
+```json
+[
+    ["p10", "n12", "n13", "n12"],
+    ["n14", "n13", "n13", "n12"],
+    ["n15", "n13", "n13", "n13"],
+    ["n16", "n14", "g", "f3"]
+]
+```
+
+In this example, we have a 4 \* 4 map. In case your map is smaller, fill the missing cells with gap cells ('g').
+
+First row:
+
+| Symbol in JSON file | Cell Type | Allowed number of moves | Weight |
+| ------------------- | --------- | ----------------------- | ------ |
+| `p10`               | Player    | 1                       | 0      |
+| `n12`               | Normal    | 1                       | 2      |
+| `n13`               | Normal    | 1                       | 3      |
+| `n12`               | Normal    | 1                       | 2      |
+
+Last row:
+
+| Symbol in JSON file | Cell Type | Allowed number of moves | Weight |
+| ------------------- | --------- | ----------------------- | ------ |
+| `n16`               | Player    | 1                       | 6      |
+| `n14`               | Normal    | 1                       | 4      |
+| `g`                 | Gap       | N / A (none)            | N / A  |
+| `f3`                | Flag      | N / A (infinite)        | 3      |
+
 ## Technical details
 
 Why support two methods of display? I wanted to decouple the core of the game from the presentation layer, which allows any presentation
-object which satisfies the `GameUI` interface to work with the application without knowing how the algorithms of the game work.
+object that satisfies the `GameUI` interface to work with the application without knowing how the algorithms of the game work.
+
+I'm reading extensively on design patterns and good Object-Oriented design, and I tried to apply what I learned in this project.
