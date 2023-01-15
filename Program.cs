@@ -30,7 +30,7 @@ void Main()
     // For displaying emojis in windows temrinal correctly
     Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-    ReachTheFlagGame game = new("D:\\my-projects\\VersionTest\\ConsoleApp1\\Maps\\");
+    ReachTheFlagGame game = new ReachTheFlagGame();
 
     var ui = ChooseGameUI();
     game.SetUserInterface(ui);

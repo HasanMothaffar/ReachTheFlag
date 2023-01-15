@@ -16,11 +16,11 @@ namespace ReachTheFlag.Game
         public readonly List<GameMap> AvailableMaps;
         public string CurrentMap { get; private set; }
 
-        public ReachTheFlagGame(string mapsDirectory)
+        public ReachTheFlagGame()
         {
             AvailableMaps = new List<GameMap>();
 
-            DirectoryInfo di = new DirectoryInfo(mapsDirectory);
+            DirectoryInfo di = new DirectoryInfo("Maps");
             FileInfo[] files = di.GetFiles("*.json");
 
             for (var i = 0; i < files.Length; i++)
