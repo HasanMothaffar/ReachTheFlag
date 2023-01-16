@@ -12,4 +12,16 @@
     <PackageReference Include="Raylib-cs" Version="4.2.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Maps\easy.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Maps\hard.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Maps\medium.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
