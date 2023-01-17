@@ -75,7 +75,7 @@ The JSON file is a 2D array that contains the rows of the map.
 
 Each row item has the following format: `Cell Type (*) | Number Of Allowed Moves | Weight`
 
--   Cell type: `n` for normal cells, `g` for gap cells, `f` for the flag cell, and `p` for the player cell.
+-   `Cell type (required)`: `n` for normal cells, `g` for gap cells, `f` for the flag cell, and `p` for the player cell.
 -   `Number Of Allowed Moves`: How many times can the user step on a normal cell. It is not applicable for gap and flag cells.
 -   `Weight` how much it costs the player to step on a cell (useful for pathfinding algorithms). `Weight` is only not applicable for gap cells.
 
@@ -92,7 +92,7 @@ Let's examine the `Maps/medium.json` map as an example:
 ]
 ```
 
-In this example, we have a 4 \* 4 map. In case your map is smaller, fill the missing cells with gap cells ('g').
+In this example, we have a 4 \* 4 map. In case your map is smaller, or is not square, fill the missing cells with gap cells ('g').
 
 First row:
 
